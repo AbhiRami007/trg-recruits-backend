@@ -1,23 +1,23 @@
 {
     "development": {
-        "username": "postgres",
-        "password": "admin@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "postgres"
+        "dialect": "mysql"
     },
     "test": {
-        "username": "postgres",
-        "password": "admin@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "postgres"
+        "dialect": "mysql"
     },
     "production": {
-        "username": "postgres",
-        "password": "admin@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "postgres"
+        "dialect": "mysql"
     }
 }

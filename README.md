@@ -1,6 +1,6 @@
 # trg-recruits-backend
 
-# Database: PostgreSQL
+## Database: PostgreSQL
 # Middleware: Express.js
 # ODM: Sequelize
 # Server Environment: Node.js

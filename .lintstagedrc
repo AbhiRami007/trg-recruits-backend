@@ -1,0 +1,9 @@
+{
+    "*.ts": [
+      "prettier --parser typescript --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ],
+    "*.{js,css,md}": "prettier --write"
+}

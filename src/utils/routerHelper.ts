@@ -19,6 +19,7 @@ export const mapMethodsToRouter = (routeMethodObjects: RouteMethodWrapper[], rou
       case 'POST':
         router.post(
           routeMethodObject.route,
+          method.param?method.param:empty,
           method.noAuth ? empty : authorization.authenticate,
           method.validator ? method.validator : empty,
           method.validator ? method.validator : empty,

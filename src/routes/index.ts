@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import login from './auth';
+import upload from './candidateDocuments'
 import {apiPrefix} from '../config/env';
 
 
@@ -9,6 +10,7 @@ const router: Router = Router();
 const userPrefix: string = `${apiPrefix.prefix}/user`;
 
 router.use(userPrefix, login);
+router.use(userPrefix, upload);
 // router.use(adminPrefix, authAdminProjectRouter);
 
 // router.use(apiPrefix.prefix, project);

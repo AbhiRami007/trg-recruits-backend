@@ -4,6 +4,7 @@ interface ControlMethodWrapper {
   noAuth?;
   multipart?;
   restMethod: string;
+  param?;
 }
 
 export interface RouteMethodWrapper {

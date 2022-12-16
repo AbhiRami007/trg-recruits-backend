@@ -28,7 +28,7 @@ const create = async (params) => {
 
 const get = async (user) => {
   return DB.User.findOne({
-    attributes: ['id', 'name', 'email','phone', 'password', 'address', 'userRole'],
+    attributes: ['id', 'firstname', 'lastname', 'email', 'password','role'],
     where: {
       email: {
         [Op.eq]: user.email,

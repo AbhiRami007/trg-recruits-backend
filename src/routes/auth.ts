@@ -8,7 +8,8 @@ const authenticationRouter: Router = Router({
 
 const authenticationRoutes: any = {
   login: '/login',
-  register:'/register'
+  register: '/register',
+  verify:'/verify_token',
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -27,6 +28,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.register,
+        restMethod: 'POST',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.verify,
+    methods: [
+      {
+        control: authController.verify,
         restMethod: 'POST',
         noAuth: true,
       },

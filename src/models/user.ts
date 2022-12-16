@@ -1,6 +1,5 @@
 'use strict';
 import {DataTypes, Model, Sequelize} from 'sequelize';
-
 export class User extends Model {
   public id: number;
   public name: string;
@@ -8,6 +7,9 @@ export class User extends Model {
   public phone: number;
   public password: string;
   public address: string;
+  public avatar: string;
+  public position: string;
+  public online: boolean;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -19,9 +21,14 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
+      first_name: {
         allowNull: false,
-        field: 'name',
+        field: 'firstname',
+        type: dataTypes.STRING(50),
+      },
+      last_name: {
+        allowNull: false,
+        field: 'lastname',
         type: dataTypes.STRING(50),
       },
       email: {
@@ -35,7 +42,6 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       phone: {
         field: 'phone',
-        allowNull: false,
         unique: true,
         type: dataTypes.BIGINT,
       },
@@ -46,14 +52,28 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       address: {
         field: 'address',
-        allowNull: false,
         type: dataTypes.STRING(200),
       },
-      userRole: {
-        field: 'role',
+      avatar: {
+        field: 'avatar',
+        defaultValue:'../assets/user_avatar_default.png',
         type: dataTypes.STRING(200),
-        defaultValue:'candidate'
-      }
+      },
+      position: {
+        field: 'position',
+        type: dataTypes.STRING(200),
+      },
+      online: {
+        field: 'online',
+        defaultValue:false,
+        type: dataTypes.BOOLEAN,
+      },
+      role: {
+        field: 'role',
+        defaultValue:'candidate',
+        type: dataTypes.STRING(200),
+      },
+
     },
     {
       sequelize,

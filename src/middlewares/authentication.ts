@@ -25,7 +25,7 @@ const generateToken = async (req, res) => {
   }
 };
 
-const authenticate = async (req, res, next) => {
+const authenticate = async (req, res) => {
   try {
     const accessToken:any = req.headers['authorization'].replace('Bearer ', '').trim();
     const refreshToken = req.headers['refreshtoken'];
@@ -58,8 +58,7 @@ const authenticate = async (req, res, next) => {
     if (!userData) {
       return responseHelper.errorResponse(res, StatusCodes.UNAUTHORIZED)('Access Denied');
     }
-    req.user = user;
-    next();
+    return userData.dataValues;
   } catch (e) {
     return responseHelper.errorResponse(res, StatusCodes.UNAUTHORIZED)('Invalid Token');
   }

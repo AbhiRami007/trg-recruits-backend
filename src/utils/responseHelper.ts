@@ -7,8 +7,8 @@ const loginSuccessResponse =
     res.setHeader('Access-Token', access);
     res.setHeader('Refresh-Token', refreshToken);
     res.status(status || StatusCodes.OK).json({
-      AccessToken: accessToken,
-      RefreshToken: refreshToken,
+      api_token: accessToken,
+      refreshToken: refreshToken,
     });
   };
 

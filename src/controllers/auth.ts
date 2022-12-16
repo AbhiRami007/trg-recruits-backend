@@ -6,8 +6,8 @@ import responseHelper from '../utils/responseHelper';
 import user from '../services/user';
 import {StatusCodes} from 'http-status-codes';
 import {User} from '../models/user';
-import authentication from '../middlewares/authentication';
 import { validateUser } from '../validators/userValidation';
+import authentication from '../middlewares/authentication';
 
 const login = async (req: Request, res: Response) => {
   try {
@@ -63,13 +63,13 @@ const register = async (req: Request, res: Response) => {
 
       if (userRes) {
         return responseHelper.errorResponse(res, StatusCodes.NOT_FOUND)('Email already registered!');
-      } else if (req.body.password !== req.body.confirm_password) {
+      } else if (req.body.password !== req.body.password_confirmation) {
         return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)('Password and Confirm password should match!');
        }
       else {
 
         const userRes: any= await user.create(req.body);
-          responseHelper.successResponse(res, StatusCodes.OK)("User Registered", userRes);
+          return responseHelper.successResponse(res, StatusCodes.OK)("User Registered", userRes);
       }
       
   } catch (error) {
@@ -77,7 +77,20 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
+const verify = async (req: Request, res: Response) => {
+  try {
+    let tokenValidity = await authentication.authenticate(req, res) 
+    tokenValidity={...tokenValidity, password:"****"}
+    return responseHelper.successResponse(res, StatusCodes.OK)("Login Successful", tokenValidity);
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+  }
+};
+
+
+
 export default {
   login,
-  register
+  register,
+  verify
 };

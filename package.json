@@ -41,9 +41,11 @@
         "multer": "^1.4.5-lts.1",
         "multer-s3": "^2.10.0",
         "mysql2": "^2.3.3",
+        "nodemailer": "^6.8.0",
         "passport": "^0.6.0",
         "passport-json": "^1.2.0",
         "passport-local": "^1.0.0",
+        "pg": "^8.8.0",
         "sequelize": "^6.20.0",
         "winston": "^3.7.2"
     },

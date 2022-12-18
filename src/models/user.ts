@@ -10,6 +10,8 @@ export class User extends Model {
   public avatar: string;
   public position: string;
   public online: boolean;
+  public isDelete: boolean;
+    public isActive: boolean;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -23,12 +25,12 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       first_name: {
         allowNull: false,
-        field: 'firstname',
+        field: 'first_name',
         type: dataTypes.STRING(50),
       },
       last_name: {
         allowNull: false,
-        field: 'lastname',
+        field: 'last_name',
         type: dataTypes.STRING(50),
       },
       email: {
@@ -43,7 +45,31 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       phone: {
         field: 'phone',
         unique: true,
-        type: dataTypes.BIGINT,
+        type: dataTypes.STRING(20),
+      },
+      company: {
+        field: 'company',
+        type: dataTypes.STRING(200),
+      },
+      company_url: {
+        field: 'company_url',
+        type: dataTypes.STRING(200),
+      },
+      country: {
+        field: 'country',
+        type: dataTypes.STRING(200),
+      },
+      language: {
+        field: 'language',
+        type: dataTypes.STRING(200),
+      },
+      time_zone: {
+        field: 'time_zone',
+        type: dataTypes.STRING(200),
+      },
+      currency: {
+        field: 'currency',
+        type: dataTypes.STRING(200),
       },
       password: {
         field: 'password',
@@ -72,6 +98,21 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'role',
         defaultValue:'candidate',
         type: dataTypes.STRING(200),
+      },
+       is_user_verified: {
+        field: 'is_user_verified',
+        defaultValue:false,
+        type: dataTypes.BOOLEAN,
+      },
+       isDelete: {
+        field: 'isDelete',
+        type: dataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isActive: {
+        field: 'isActive',
+        type: dataTypes.BOOLEAN,
+        defaultValue: true,
       },
 
     },

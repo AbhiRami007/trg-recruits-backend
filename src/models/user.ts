@@ -2,9 +2,15 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
 export class User extends Model {
   public id: number;
-  public name: string;
+  public first_name: string;
+  public last_name: string;
   public email: string;
   public phone: number;
+  public company: string;
+  public country: string;
+  public language: string;
+  public time_zone: string;
+  public currency: string;
   public password: string;
   public address: string;
   public avatar: string;
@@ -51,10 +57,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'company',
         type: dataTypes.STRING(200),
       },
-      company_url: {
-        field: 'company_url',
-        type: dataTypes.STRING(200),
-      },
+      
       country: {
         field: 'country',
         type: dataTypes.STRING(200),

@@ -2,6 +2,7 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
 export class Jobs extends Model {
   public id: number;
+  public logo: string;
   public title: string;
   public company: string;
   public location: number;
@@ -29,6 +30,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      logo: {
+        allowNull: false,
+        field: 'title',
+        type: dataTypes.STRING(200),
       },
       title: {
         allowNull: false,

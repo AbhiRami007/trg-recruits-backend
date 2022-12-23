@@ -1,23 +1,23 @@
 {
     "development": {
-        "username": "u898803288_recruitscrm",
-        "password": "Root@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
-        "host": "127.0.0.1:3306",
+        "host": "localhost",
         "dialect": "mysql"
     },
     "test": {
-        "username": "u898803288_recruitscrm",
-        "password": "Root@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
-        "host": "127.0.0.1:3306",
+        "host": "localhost",
         "dialect": "mysql"
     },
     "production": {
-        "username": "u898803288_recruitscrm",
-        "password": "Root@123",
+        "username": "root",
+        "password": "root@123",
         "database": "crmdatabase",
-        "host": "127.0.0.1:3306",
+        "host": "localhost",
         "dialect": "mysql"
     }
 }

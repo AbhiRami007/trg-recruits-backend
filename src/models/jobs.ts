@@ -10,7 +10,6 @@ export class Jobs extends Model {
   public level: string;
   public employee_count: string;
   public company_type: string;
-    public alumni_info: boolean;
     public overview: Array<string>;
   public job_description: Array<string>;
   public job_responsibilities: Array<string>;
@@ -67,10 +66,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'company_type',
         type: dataTypes.STRING(200),
       },
-      alumni_info: {
-        field: 'alumni_info',
-        type: dataTypes.STRING(200),
-      },
+      
       overview: {
         field: 'overview',
         type: dataTypes.ARRAY(DataTypes.STRING),

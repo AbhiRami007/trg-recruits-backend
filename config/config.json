@@ -1,23 +1,23 @@
 {
     "development": {
-        "username": "postgres",
-        "password": "admin@123",
+        "username": "u898803288_recruitscrm",
+        "password": "Root@123",
         "database": "crmdatabase",
-        "host": "localhost",
-        "dialect": "postgres"
+        "host": "127.0.0.1:3306",
+        "dialect": "mysql"
     },
     "test": {
-        "username": "u898803288_recruits",
-        "password": "123456",
-        "database": "u898803288_recruits",
-        "host": "therecruitsgroup.com",
-        "dialect": "postgres"
+        "username": "u898803288_recruitscrm",
+        "password": "Root@123",
+        "database": "crmdatabase",
+        "host": "127.0.0.1:3306",
+        "dialect": "mysql"
     },
     "production": {
-        "username": "u898803288_recruits",
-        "password": "123456",
-        "database": "u898803288_recruits",
-        "host": "therecruitsgroup.com",
-        "dialect": "postgres"
+        "username": "u898803288_recruitscrm",
+        "password": "Root@123",
+        "database": "crmdatabase",
+        "host": "127.0.0.1:3306",
+        "dialect": "mysql"
     }
 }

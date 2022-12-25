@@ -9,7 +9,7 @@
         "start:inspect": "DOTENV_CONFIG_PATH=.env node -r dotenv/config --inspect ./build/server.js",
         "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/server.ts",
         "dev:watch": "nodemon --config nodemon.json",
-        "clean": "rimraf ./build && rm ./build/src/*.map",
+        "clean": "rimraf ./build && rm ./build/src/**/*.map",
         "build": "npm run lint && npm run clean && tsc",
         "lint": "",
         "build:watch": "tsc -w",

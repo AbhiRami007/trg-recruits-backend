@@ -23,7 +23,7 @@ module.exports = {
         },
         logging: process.env.NODE_ENV === 'development' ? console.log : false,
     },
-    testing: {
+    production: {
         database: process.env.DB_NAME,
         username: process.env.DB_USER,
         password: process.env.DB_PASS,

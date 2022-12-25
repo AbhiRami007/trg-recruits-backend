@@ -1,8 +1,8 @@
 import {AddressInfo} from 'net';
-import app from './src/app';
-import {CONFIG} from './src/config/env';
-import models from './src/models';
-import logger from './src/utils/logger';
+import app from './app';
+import {CONFIG} from './config/env';
+import models from './models';
+import logger from './utils/logger';
 
 const server = app.listen(CONFIG.PORT || 3000, async () => {
   await models.sequelize.sync();

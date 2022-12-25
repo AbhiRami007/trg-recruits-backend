@@ -1,6 +1,6 @@
 {
     "watch": ["src"],
     "ext": "ts",
-    "ignore": ["src/**/*.spec.ts"],
+    "ignore": ["src/**/*.spec.ts", "src/**/*.js.map"],
     "exec": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./server.ts"
 }

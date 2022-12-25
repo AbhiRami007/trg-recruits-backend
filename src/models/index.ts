@@ -8,12 +8,13 @@ const basename = path.basename(module.filename);
 const env = CONFIG.ENV || 'production';
 const config = sequelizeConfig[env];
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config.dialect,
-
+const database = config.database;
+const user = config.username;
+const pass = config.password;
+const host = config.host;
+const dialect = 'postgres';
+const port = config.port;
+const sequelize = new Sequelize(database, user, pass, {host, dialect, port},
 );
 const db = {
   sequelize,

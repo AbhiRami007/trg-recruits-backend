@@ -9,7 +9,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
-/build
+
 # package directories
 node_modules
 jspm_packages

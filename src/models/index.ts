@@ -23,7 +23,7 @@ const db = {
 const modelFiles: string[] = [];
 (() => {
   for (const f of getFiles(__dirname)) {
-    if (f.includes(basename)) {
+    if (f.includes(basename) && f.split('.')[-1]!=='map') {
       continue;
     }
     modelFiles.push(f);

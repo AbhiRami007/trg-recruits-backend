@@ -10,7 +10,7 @@
         "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/server.ts",
         "dev:watch": "nodemon --config nodemon.json",
         "clean": "rimraf ./build",
-        "build": "npm run lint && npm run clean && tsc",
+        "build": "npm install && npm run lint && npm run clean && tsc",
         "lint": "",
         "build:watch": "tsc -w",
         "test": "jest --coverage",
@@ -24,6 +24,10 @@
     },
     "author": "Abhirami",
     "license": "ISC",
+    "engines": {
+        "node": "16.x",
+        "npm": "~1.0.20"
+    },
     "dependencies": {
         "aws-sdk": "^2.1281.0",
         "bcryptjs": "^2.4.3",
@@ -46,6 +50,8 @@
         "passport": "^0.6.0",
         "passport-json": "^1.2.0",
         "passport-local": "^1.0.0",
+        "pg": "^8.8.0",
+        "postgres": "^3.3.2",
         "sequelize": "^6.28.0",
         "winston": "^3.8.2"
     },

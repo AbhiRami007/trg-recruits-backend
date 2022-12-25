@@ -5,14 +5,16 @@ import sequelizeConfig from '../config/sequelize';
 import {DB} from '../types/db';
 import {getFiles} from '../utils/importHelper';
 const basename = path.basename(module.filename);
-const env = CONFIG.ENV || 'development';
+const env = CONFIG.ENV || 'production';
 const config = sequelizeConfig[env];
 
 const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
-  config,
+  config.host,
+  config.dialect,
+
 );
 const db = {
   sequelize,

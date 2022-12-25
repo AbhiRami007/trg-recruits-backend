@@ -14,10 +14,11 @@
         "dialect": "postgres"
     },
     "production": {
-        "username": "root",
-        "password": "root@123",
+        "username": "trguser",
+        "password": "AVNS_JBjtEAJIje_OQx4MK43",
         "database": "crmdatabase",
-        "host": "localhost",
-        "dialect": "postgres"
+        "host": "root-do-user-13165248-0.b.db.ondigitalocean.com",
+        "dialect": "postgres",
+        "port": "25060"
     }
 }

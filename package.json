@@ -10,7 +10,7 @@
         "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/server.ts",
         "dev:watch": "nodemon --config nodemon.json",
         "clean": "rimraf ./build/server.js",
-        "build": "DOTENV_CONFIG_PATH=.env node -r dotenv/config ./build/server.js",
+        "build": "npm install && npm run lint && npm run clean && tsc",
         "lint": "",
         "build:watch": "tsc -w",
         "test": "jest --coverage",

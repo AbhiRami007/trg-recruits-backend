@@ -4,20 +4,20 @@
         "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "mysql"
+        "dialect": "postgres"
     },
     "test": {
         "username": "root",
         "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "mysql"
+        "dialect": "postgres"
     },
     "production": {
         "username": "root",
         "password": "root@123",
         "database": "crmdatabase",
         "host": "localhost",
-        "dialect": "mysql"
+        "dialect": "postgres"
     }
 }

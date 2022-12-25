@@ -8,6 +8,7 @@
     "linterOptions": {
       "exclude": [
         "src/config/**/*.{ts,js}",
+        "src/**/*.js.map",
         "node_modules/**/*.ts",
         "db/**/*.{ts,js}"
       ]

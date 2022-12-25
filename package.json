@@ -4,7 +4,7 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "start": "rm ./build/src/**/*.js.map && DOTENV_CONFIG_PATH=.env node -r dotenv/config ./build/server.js",
+        "start": "DOTENV_CONFIG_PATH=.env node -r dotenv/config ./build/server.js",
         "start:debug": "DEBUG=express:* DOTENV_CONFIG_PATH=.env node -r dotenv/config ./build/src/server.js",
         "start:inspect": "DOTENV_CONFIG_PATH=.env node -r dotenv/config --inspect ./build/src/server.js",
         "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/server.ts",

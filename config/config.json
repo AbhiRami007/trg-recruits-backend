@@ -15,9 +15,9 @@
     },
     "production": {
         "username": "trguser",
-        "password": "AVNS_JBjtEAJIje_OQx4MK43",
+        "password": "AVNS_CnxdpTeBxAsiSt55lTi",
         "database": "crmdatabase",
-        "host": "root-do-user-13165248-0.b.db.ondigitalocean.com",
+        "host": "db-postgresql-lon1-17248-do-user-13165248-0.b.db.ondigitalocean.com",
         "dialect": "postgres",
         "port": "25060"
     }

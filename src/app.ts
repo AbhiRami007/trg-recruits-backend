@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import { CONFIG } from './src/config/env';
-import models from './src/models';
-import router from './src/routes';
+import { CONFIG } from './config/env';
+import models from './models';
+import router from './routes';
 
 const app = express();
 

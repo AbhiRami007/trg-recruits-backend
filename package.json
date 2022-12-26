@@ -11,16 +11,7 @@
         "dev:watch": "nodemon --config nodemon.json",
         "clean": "rimraf ./build",
         "build": "npm run lint && npm run clean && tsc",
-        "lint": "",
-        "build:watch": "tsc -w",
-        "test": "jest --coverage",
-        "test:watch": "jest --watch",
-        "db:migrate": "sequelize-cli db:migrate",
-        "db:seed:all": "sequelize-cli db:seed:all",
-        "prettier": "lint-staged",
-        "precommit": "npm run prettier && npm run lint",
-        "prepush": "npm run build",
-        "format": "prettier --write ."
+        "prepush": "npm run build"
     },
     "author": "Abhirami",
     "license": "ISC",

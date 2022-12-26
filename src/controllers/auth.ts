@@ -1,6 +1,4 @@
 import {Request, Response} from 'express';
-import passport from 'passport';
-import JsonStrategy from 'passport-json';
 import authHelper from '../utils/authHelper';
 import responseHelper from '../utils/responseHelper';
 import user from '../services/user';
@@ -13,24 +11,6 @@ import { verifyTemplate } from '../assets/email_template/verify';
 
 const login = async (req: Request, res: Response) => {
   try {
-    const passportResponse: any= passport.use(
-      new JsonStrategy(
-        {
-          usernameProp: 'email',
-          passwordProp: 'password',
-          session: false,
-        },
-        function(username, _password, _done) {
-          user.get(username).then((user) => {
-            if (!user) {
-              return false;
-            }
-            return user;
-          });
-        },
-      ),
-    );
-    if (passportResponse) {
       const userRes: User|null = await user.get(req.body);
       if (!userRes) {
         return responseHelper.errorResponse(res, StatusCodes.NOT_FOUND)('No User Found');
@@ -52,7 +32,6 @@ const login = async (req: Request, res: Response) => {
           responseHelper.errorResponse(res, StatusCodes.UNAUTHORIZED)('Authentication Failed');
         }
       }
-    }
   } catch (error) {
     responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
   }

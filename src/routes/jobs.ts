@@ -8,37 +8,30 @@ const authenticationRouter: Router = Router({
 });
 
 const authenticationRoutes: any = {
-    add: '/jobs',
-    getAll:'/all/jobs',
-    getByTitle: '/jobs',
-    getById: '/jobs/:id',
-    getByLocation: '/location/jobs',
+    jobs: '/jobs',
+    getByTitle: '/jobs/title',
+    jobsId: '/jobs/:id',
+    getByLocation: '/jobs/location',
     remove:'/remove/jobs/:id',
-    update:'/jobs/:id',
   
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
   {
-    route: authenticationRoutes.add,
+    route: authenticationRoutes.jobs,
     methods: [
       {
         control: jobs.createJobs,
         restMethod: 'POST',
         noAuth: true,
       },
-    ],
-  },
- {
-    route: authenticationRoutes.getAll,
-    methods: [
       {
         control: jobs.listJobs,
         restMethod: 'GET',
         noAuth: true,
       },
     ],
-    },
+  },
   {
     route: authenticationRoutes.getByTitle,
     methods: [
@@ -50,11 +43,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
     ],
     },
    {
-    route: authenticationRoutes.getById,
+    route: authenticationRoutes.jobsId,
     methods: [
       {
         control: jobs.getJobsById,
         restMethod: 'GET',
+        noAuth: true,
+      },
+      {
+        control: jobs.updateJob,
+        restMethod: 'PUT',
         noAuth: true,
       },
     ],
@@ -78,17 +76,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
         noAuth: true,
       },
     ],
-    },
-      {
-    route: authenticationRoutes.update,
-    methods: [
-      {
-        control: jobs.updateJob,
-        restMethod: 'PUT',
-        noAuth: true,
-      },
-    ],
-  },
+    }
 ];
 
 mapMethodsToRouter(authenticationMethods, authenticationRouter);

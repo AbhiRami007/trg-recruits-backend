@@ -14,7 +14,7 @@
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "esModuleInterop": true,
-      "sourceMap": true,
+      "sourceMap": false,
       "resolveJsonModule": true
     },
     "exclude": ["node_modules", "src/**/*.js.map"],

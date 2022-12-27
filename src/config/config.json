@@ -1,0 +1,10 @@
+{
+    "production": {
+        "username": "doadmin",
+        "password": "AVNS_yomO2UIH7EgXpJ_zYlY",
+        "database": "defaultdb",
+        "host": "postgres-recruits-do-user-13165248-0.b.db.ondigitalocean.com",
+        "dialect": "postgres",
+        "port": "25060"
+    }
+}

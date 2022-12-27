@@ -14,8 +14,21 @@ const pass = config.password;
 const host = config.host;
 const dialect = 'postgres';
 const port = config.port;
-const sequelize = new Sequelize(database, user, pass, {host, dialect, port},
-);
+
+const sequelize = new Sequelize({
+  database: database,
+  username: user,
+  password: pass,
+  host: host,
+  port: port,
+  dialect: dialect,
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false // This line will fix new error
+    }
+  },
+});
 const db = {
   sequelize,
   Sequelize,

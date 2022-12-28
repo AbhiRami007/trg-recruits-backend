@@ -1,8 +1,8 @@
 {
     "production": {
-        "username": "doadmin",
-        "password": "AVNS_yomO2UIH7EgXpJ_zYlY",
-        "database": "defaultdb",
+        "username": "trg-recruits",
+        "password": "AVNS_HhheXiWPisbxH9xOFFQ",
+        "database": "crmdatabase",
         "host": "postgres-recruits-do-user-13165248-0.b.db.ondigitalocean.com",
         "dialect": "postgres",
         "port": "25060"

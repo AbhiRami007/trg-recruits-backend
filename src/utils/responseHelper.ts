@@ -2,13 +2,14 @@ import {Response} from 'express';
 import {StatusCodes} from 'http-status-codes';
 
 const loginSuccessResponse =
-  (res: Response, status?: number) => (accessToken, refreshToken) => {
+  (res: Response, status?: number) => (accessToken, refreshToken, id) => {
     const access = 'Bearer ' + accessToken;
     res.setHeader('Access-Token', access);
     res.setHeader('Refresh-Token', refreshToken);
     res.status(status || StatusCodes.OK).json({
       api_token: accessToken,
       refreshToken: refreshToken,
+      userId: id
     });
   };
 

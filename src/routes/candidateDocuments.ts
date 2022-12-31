@@ -7,33 +7,52 @@ const uploadRouter: Router = Router({
 });
 
 const uploadRoutes: any = {
-    upload: '/upload',
-    // list:'/list',
+  upload: '/document/:type/:email',
+  get:'/document/:type/:email/:file',
+  list:'/document/list'
 };
 
 const uploadMethods: RouteMethodWrapper[] = [
-  {
-    route: uploadRoutes.upload,
-    methods: [
+{
+  route: uploadRoutes.upload,
+  methods: [
+    {
+      control: candidateController.uploadDocument,
+      restMethod: 'POST',
+      noAuth: true,
+      param: candidateController.uploadFile.single("file"),
+    },
+  ],
+},
+{
+  route: uploadRoutes.get,
+  methods: [
+    {
+      control: candidateController.getDocument,
+      restMethod: 'GET',
+      noAuth: true,
+    },
       {
-        control: candidateController.uploadDocuments,
-        restMethod: 'POST',
+        control: candidateController.deleteDocument,
+        restMethod: 'DELETE',
         noAuth: true,
-        param: candidateController.uploadFile.array("files"),
       },
-    ],
-  },
-//   {
-//     route: uploadRoutes.list,
-//     methods: [
-//       {
-//         control: candidateController.listDocuments,
-//         restMethod: 'get',
-//       },
-//     ],
-//   },
-];
+    
+  ],
+},
+{
+  route: uploadRoutes.list,
+  methods: [
+    {
+      control: candidateController.listDocuments,
+      restMethod: 'GET',
+      noAuth: true,
+    },
+    
+  ],
+},
 
+];
 mapMethodsToRouter(uploadMethods, uploadRouter);
 
 export default uploadRouter;

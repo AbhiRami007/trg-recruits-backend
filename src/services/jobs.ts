@@ -74,6 +74,16 @@ const remove = async (id: any) => {
   );
 };
 
+const listSavedApplied = async (req) => {
+  return DB.Jobs.findAndCountAll({
+    where: {
+      id:{
+        [Op.in]:req
+      }
+    },
+  });
+};
+
 export default {
   create,
   get,
@@ -81,5 +91,6 @@ export default {
   update,
     getById,
     getByTitle,
-  list
+  list,
+  listSavedApplied
 };

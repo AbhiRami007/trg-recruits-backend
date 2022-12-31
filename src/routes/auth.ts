@@ -12,7 +12,11 @@ const authenticationRoutes: any = {
   verify: '/verify_token',
   verifyStatus: '/verify/:id',
   updateUser: '/update/:id',
-  getUser:'/:email'
+  getUser:'/id/:id',
+  verifyotp:'/verify-otp',
+  applied:'/applied-jobs/:email',
+  saved:'/saved/:email',
+  resend:'/resend-otp'
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -71,6 +75,56 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.getUser,
+        restMethod: 'GET',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.verifyotp,
+    methods: [
+      {
+        control: authController.verifyOtp,
+        restMethod: 'PUT',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.resend,
+    methods: [
+      {
+        control: authController.resendOtp,
+        restMethod: 'PUT',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.applied,
+    methods: [
+      {
+        control: authController.appliedJobs,
+        restMethod: 'PUT',
+        noAuth: true,
+      },
+      {
+        control: authController.getAppliedJobs,
+        restMethod: 'GET',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.saved,
+    methods: [
+      {
+        control: authController.savedJobs,
+        restMethod: 'PUT',
+        noAuth: true,
+      },
+      {
+        control: authController.getSavedJobs,
         restMethod: 'GET',
         noAuth: true,
       },

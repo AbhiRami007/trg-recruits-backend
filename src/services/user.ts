@@ -36,7 +36,7 @@ const getById = async (user) => {
 
 
 const update = async (user) => {
-  return DB.User.update({isUserVerified:true}, {
+  return DB.User.update({is_user_verified:true}, {
     where: {
       id: {
         [Op.eq]: user,
@@ -45,11 +45,43 @@ const update = async (user) => {
   });
 };
 
+
+const updateOtp = async (otpObj, id) => {
+  
+  return DB.User.update(otpObj, {
+    where: {
+      id: {
+        [Op.eq]: id,
+      },
+    },
+  });
+};
+
 const updateUserInfo = async (req) => {
-  return DB.User.update(req.body.reqBody, {
+  return DB.User.update(req.body, {
     where: {
       id: {
         [Op.eq]: req.params.id,
+      },
+    },
+  });
+};
+
+const updateUserActive = async (user) => {
+  return DB.User.update({isActive:true}, {
+    where: {
+      email: {
+        [Op.eq]: user,
+      },
+    },
+  });
+};
+
+const updateAppliedSaved = async (body,user) => {
+  return DB.User.update({body}, {
+    where: {
+      email: {
+        [Op.eq]: user,
       },
     },
   });
@@ -60,5 +92,8 @@ export default {
   get,
   updateUserInfo,
   update,
-  getById
+  getById,
+  updateOtp,
+  updateAppliedSaved,
+  updateUserActive
 };

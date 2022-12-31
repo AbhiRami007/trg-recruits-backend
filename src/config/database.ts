@@ -7,12 +7,12 @@ module.exports = ({ env }) => ({
             database: env('DB_NAME'),
             user: env('DB_USERNAME'),
             password: env('DB_PASSWORD'),
-            dialectOptions: {
-                ssl: {
-                    require: true, // This will help you. But you will see nwe error
-                    rejectUnauthorized: false // This line will fix new error
-                }
-            },
+            // dialectOptions: {
+            //     ssl: {
+            //         require: true, // This will help you. But you will see nwe error
+            //         rejectUnauthorized: false // This line will fix new error
+            //     }
+            // },
         },
         debug: false,
     },

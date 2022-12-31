@@ -2,31 +2,20 @@ import {Router} from 'express';
 import login from './auth';
 import upload from './candidateDocuments'
 import jobs from './jobs'
+import profile from './picturesUpload'
+import comments from './comments'
+import status from './trackStatus'
 import {apiPrefix} from '../config/env';
 
-
 const router: Router = Router();
-
-// const adminPrefix: string = `${apiPrefix.prefix}/accounts`;
 const userPrefix: string = `${apiPrefix.prefix}/user`;
-const jobPrefix: string = `${apiPrefix.prefix}/`;
+// const prefix: string = `${apiPrefix.prefix}/`;
 
 router.use(userPrefix, login);
 router.use(userPrefix, upload);
-router.use(jobPrefix, jobs);
-// router.use(adminPrefix, authAdminProjectRouter);
-
-// router.use(apiPrefix.prefix, project);
-// router.use(apiPrefix.prefix, featureFlagRouter);
-// router.use(apiPrefix.prefix, rules);
-// router.use(apiPrefix.prefix, rulesParams);
-// router.use(apiPrefix.prefix, condition);
-// router.use(apiPrefix.prefix, operators);
-// router.use(apiPrefix.prefix, parameterTypeRouter);
-
-// router.use(clientPrefix, authClientProjectRouter);
-// router.use(clientPrefix, RegisterRouter);
-// router.use(clientPrefix, featureFlagClientRouter);
-
+router.use(userPrefix, jobs);
+router.use(userPrefix, profile);
+router.use(userPrefix, comments);
+router.use(userPrefix, status);
 
 export default router;

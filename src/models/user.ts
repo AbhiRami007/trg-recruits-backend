@@ -15,6 +15,10 @@ export class User extends Model {
   public address: string;
   public avatar: string;
   public position: string;
+  public otp: number;
+  public expiration_time: Date;
+  public applied_jobs:Array<string>;
+  public saved_jobs:Array<string>;
   public online: boolean;
   public isDelete: boolean;
     public isActive: boolean;
@@ -85,8 +89,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       avatar: {
         field: 'avatar',
-        defaultValue:'../assets/user_avatar_default.png',
-        type: dataTypes.STRING(200),
+        type: dataTypes.STRING(10000),
       },
       position: {
         field: 'position',
@@ -115,9 +118,24 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       isActive: {
         field: 'isActive',
         type: dataTypes.BOOLEAN,
-        defaultValue: true,
+        defaultValue: false,
       },
-
+      otp:{
+        field: 'otp',
+        type: dataTypes.INTEGER,
+      },
+      expiration_time:{
+        field: 'expiration_time',
+        type: dataTypes.DATE,
+      },
+      applied_jobs: {
+        field: 'applied_jobs',
+        type: dataTypes.ARRAY(DataTypes.STRING),
+      },
+      saved_jobs: {
+        field: 'saved_jobs',
+        type: dataTypes.ARRAY(DataTypes.STRING),
+      },
     },
     {
       sequelize,

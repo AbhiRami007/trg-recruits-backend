@@ -106,7 +106,6 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.BOOLEAN,
         defaultValue: true,
       },
-
     },
     {
       sequelize,

@@ -14,9 +14,9 @@ const authenticationRoutes: any = {
   updateUser: '/update/:id',
   getUser:'/id/:id',
   verifyotp:'/verify-otp',
-  applied:'/applied-jobs/:email',
-  saved:'/saved/:email',
-  resend:'/resend-otp'
+  resend:'/resend-otp',
+  forgotPass:'/forgot-password',
+  checkPass:'/check-password'
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -25,6 +25,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.login,
+        restMethod: 'POST',
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.forgotPass,
+    methods: [
+      {
+        control: authController.forgotPassword,
         restMethod: 'POST',
         noAuth: true,
       },
@@ -101,31 +111,11 @@ const authenticationMethods: RouteMethodWrapper[] = [
     ],
   },
   {
-    route: authenticationRoutes.applied,
+    route: authenticationRoutes.checkPass,
     methods: [
       {
-        control: authController.appliedJobs,
-        restMethod: 'PUT',
-        noAuth: true,
-      },
-      {
-        control: authController.getAppliedJobs,
-        restMethod: 'GET',
-        noAuth: true,
-      },
-    ],
-  },
-  {
-    route: authenticationRoutes.saved,
-    methods: [
-      {
-        control: authController.savedJobs,
-        restMethod: 'PUT',
-        noAuth: true,
-      },
-      {
-        control: authController.getSavedJobs,
-        restMethod: 'GET',
+        control: authController.checkPassword,
+        restMethod: 'POST',
         noAuth: true,
       },
     ],

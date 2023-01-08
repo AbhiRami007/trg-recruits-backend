@@ -74,7 +74,7 @@ const remove = async (id: any) => {
   );
 };
 
-const listSavedApplied = async (req) => {
+const listJobsById = async (req) => {
   return DB.Jobs.findAndCountAll({
     where: {
       id:{
@@ -92,5 +92,5 @@ export default {
     getById,
     getByTitle,
   list,
-  listSavedApplied
+  listJobsById
 };

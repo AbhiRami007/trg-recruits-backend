@@ -6,8 +6,9 @@ import { StatusCodes } from 'http-status-codes'
 import { User } from '../models/user'
 import { validateUser } from '../validators/userValidation'
 import authentication from '../middlewares/authentication'
-import jobs from '../services/jobs'
-import sendGridMail from '@sendgrid/mail'
+import { otpGenerator } from '../utils/otp'
+import { sendVerificationEmail } from '../utils/email'
+import { CONFIG } from '../config/env'
 
 
 const login = async (req: Request, res: Response) => {
@@ -39,7 +40,7 @@ const login = async (req: Request, res: Response) => {
         responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
           tokenData.accessToken,
           tokenData.refreshToken,
-          userRes
+          tokenData.userId
         )
       } else {
         responseHelper.errorResponse(
@@ -54,10 +55,6 @@ const login = async (req: Request, res: Response) => {
       StatusCodes.INTERNAL_SERVER_ERROR,
     )(error.errors[0].message)
   }
-}
-
-function AddMinutesToDate(date, minutes) {
-  return new Date(date.getTime() + minutes * 60000)
 }
 
 const register = async (req: Request, res: Response) => {
@@ -85,57 +82,21 @@ const register = async (req: Request, res: Response) => {
       let userData = await user.create(req.body)
       if (req.body.email) {
         //Generate OTP
-    
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        const now = new Date()
-        const expiration_time = AddMinutesToDate(now, 5)
-    
+        const otpInfo = otpGenerator();
         const email = req.body.email
         const subject = 'Verify Email'
         const body = `<h1>Email Confirmation</h1>
           <h2>Hello ${req.body.first_name + ' ' + req.body.last_name}</h2>
           <p>Thank you for signing up.</p>
-          <p>This is your OTP:<h1>${otp}</h1> Valid for 5 mins</p>
+          <p>This is your OTP:<h1>${otpInfo.otp}</h1> Valid for 5 mins</p>
           <p>Do not share your OTP with anyone!</p>
           </div>`
-    
-        sendGridMail.setApiKey(
-          process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY : '',
-        )
-    
-        function getMessage(email, subject, body) {
-          return {
-            to: email,
-            from: 'therecruitsgroup@gmail.com',
-            subject: subject,
-            text: 'The Recruits Group Ltd.',
-            html: body,
-          }
-        }
-    
-        async function sendEmail(email, subject, body) {
-          try {
-            await sendGridMail.send(getMessage(email, subject, body))
-            console.log('Email sent successfully')
-          } catch (error) {
-            console.error('Error sending test email')
-            console.error(error)
-            if (error.response) {
-              console.error(error.response.body)
-            }
-          }
-        }
-    
-        (async () => {
-          console.log('Sending email')
-          await sendEmail(email, subject, body)
-        })() 
-    
+        await sendVerificationEmail(email, subject, body)
         //Create OTP instance in DB
-       await user.updateOtp(
+       await user.update(
         {
-          otp: otp,
-          expiration_time: expiration_time,
+          otp: await authHelper.hashData(otpInfo.otp) ,
+          expiration_time: otpInfo.expiration_time,
         },
         userData.id,
       )
@@ -183,7 +144,7 @@ const verifyRegistration = async (req: Request, res: Response) => {
   try {
     const userInfo = await user.get(req.params.id)
     if (userInfo) {
-      const updateStatus = await user.update(req.params.id)
+      const updateStatus = await user.update({is_user_verified:true},req.params.id)
       if (updateStatus) {
         return responseHelper.successResponse(
           res,
@@ -203,7 +164,12 @@ const updaterUserInfo = async (req: Request, res: Response) => {
   try {
     const userInfo = await user.getById(req.params.id)
     if (userInfo) {
-      const updateStatus = await user.updateUserInfo(req)
+      let hash: string;
+      if(req.body.password){
+        hash=await authHelper.hashData(req.body.password)
+        req.body.password= hash
+      }
+      const updateStatus = await user.update(req.body, req.params.id)
       if (updateStatus) {
         return responseHelper.successResponse(
           res,
@@ -221,8 +187,7 @@ const updaterUserInfo = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const userInfo = await user.getById(req.params)
-
+    const userInfo = await user.getById(req.params.id)
     return responseHelper.successResponse(res, StatusCodes.OK)(
       'Details fetched Successfully',
       userInfo,
@@ -235,20 +200,20 @@ const getUser = async (req: Request, res: Response) => {
   }
 }
 
-
 const verifyOtp = async (req: Request, res: Response) => {
   try {
     let userInfo: any = await user.get(req.body);
-    const now=new Date();
-    const isExpired = AddMinutesToDate(now, 5);
+    const otpInfo = await otpGenerator();
+    const isExpired = otpInfo.expiration_time;
+    const otp = await authHelper.authenticatePassword(req.body.otp, userInfo?.otp)
     
-    if(userInfo && userInfo?.otp==req.body.otp && userInfo.expiration_time < isExpired ){
-      await user.updateUserActive(userInfo.email)
+    if(userInfo && otp && userInfo.expiration_time < isExpired ){
+      await user.updateByEmail({isActive:true}, userInfo.email)
       return responseHelper.successResponse(res, StatusCodes.OK)(
         'User Verified',
         userInfo
       )
-    }else if(userInfo && userInfo?.otp !==req.body.otp){
+    }else if(userInfo && !otp){
       return responseHelper.errorResponse(res, StatusCodes.OK)(
         'Otp Invalid',
       )
@@ -265,131 +230,80 @@ const verifyOtp = async (req: Request, res: Response) => {
   }
 }
 
-const appliedJobs = async (req: Request, res: Response) => {
-  try {
-    const isApplied = await user.get(req.params); 
-    if(isApplied?.applied_jobs.includes(req.body.applied_jobs)){
-      return responseHelper.successResponse(res, StatusCodes.OK)("Already Applied");
-    }  
-    const applied = await user.updateAppliedSaved(req.body, req.params.email)
-      if(applied){
-        return responseHelper.successResponse(res, StatusCodes.OK)("Application Sent");
-      }      
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
-};
-
-const savedJobs = async (req: Request, res: Response) => {
-  try {
-    const isSaved = await user.get(req.params); 
-    if(isSaved?.saved_jobs.includes(req.body.saved_jobs)){
-      return responseHelper.successResponse(res, StatusCodes.OK)("Already Saved");
-    }  
-    const saved = await user.updateAppliedSaved(req.body, req.params.email)
-      if(saved){
-        return responseHelper.successResponse(res, StatusCodes.OK)("Saved");
-      }      
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
-};
-
-const getSavedJobs = async (req: Request, res: Response) => {
-  try {
-    const userInfo = await user.get(req.params);
-    const jobsData = await jobs.listSavedApplied(userInfo?.saved_jobs); 
-    if(jobsData){
-      return responseHelper.successResponse(res, StatusCodes.OK)("Saved Jobs List", jobsData);
-    }  else{
-      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("No Jobs Saved");
-    }
-         
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
-};
-
-const getAppliedJobs = async (req: Request, res: Response) => {
-  try {
-    const userInfo = await user.get(req.params);
-    const jobsData = await jobs.listSavedApplied(userInfo?.applied_jobs); 
-    if(jobsData){
-      return responseHelper.successResponse(res, StatusCodes.OK)("Applied Jobs List", jobsData);
-    }  else{
-      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("No Jobs Applied");
-    }
-         
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
-};
-
 const resendOtp = async (req: Request, res: Response) => {
   try {
-    let userData: any = await user.get(req.body)
+    let userData: any = await user.get(req.body.email)
     if (req.body.email) {
       //Generate OTP
-      const otp = Math.floor(100000 + Math.random() * 900000);
-      const now = new Date()
-      const expiration_time = AddMinutesToDate(now, 5)
-  
-      const email = req.body.email
+      const otpInfo = otpGenerator();
+
+      //update email or verify existing email
+      const email = req.body.newemail?req.body.newemail:req.body.email
       const subject = 'Verify Email'
       const body = `<h1>Email Confirmation</h1>
-        <h2>Hello ${req.body.first_name + ' ' + req.body.last_name}</h2>
+        <h2>Hello ${userData.first_name + ' ' + userData.last_name}</h2>
         <p>Thank you for signing up.</p>
-        <p>This is your OTP:<h1>${otp}</h1> Valid for 5 mins</p>
+        <p>This is your OTP:<h1>${otpInfo.otp}</h1> Valid for 5 mins</p>
         <p>Do not share your OTP with anyone!</p>
         </div>`
+      
+      await sendVerificationEmail(email, subject, body)
   
-      sendGridMail.setApiKey(
-        process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY : '',
+      //OTP instance in DB
+      await user.update(
+        {
+          otp: otpInfo.otp,
+          expiration_time: otpInfo.expiration_time,
+        },
+        userData.id,
       )
-  
-      function getMessage(email, subject, body) {
-        return {
-          to: email,
-          from: 'therecruitsgroup@gmail.com',
-          subject: subject,
-          text: 'The Recruits Group Ltd.',
-          html: body,
-        }
       }
-  
-      async function sendEmail(email, subject, body) {
-        try {
-          await sendGridMail.send(getMessage(email, subject, body))
-          console.log('Email sent successfully')
-        } catch (error) {
-          console.error('Error sending test email')
-          console.error(error)
-          if (error.response) {
-            console.error(error.response.body)
-          }
-        }
-      }
-  
-      (async () => {
-        console.log('Sending email')
-        await sendEmail(email, subject, body)
-      })() 
-  
-      //Create OTP instance in DB
-     await user.updateOtp(
-      {
-        otp: otp,
-        expiration_time: expiration_time,
-      },
-      userData.id,
-    )
-    }
     return responseHelper.successResponse(
       res,
       StatusCodes.OK,
     )(
       'An Email is sent to your registered mail id, Please verify to proceed!',
     )  
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+
+const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    let userData: any = await user.get(req.body)
+    const url=`${CONFIG.REACT_BASE_URL}/auth/password-reset/${userData.id}`
+    if (req.body.email) {  
+      const email = req.body.email
+      const subject = 'Password Reset'
+      const body = `<h1>Password Reset Link </h1>
+        <h2>Hello ${userData.first_name + ' ' + userData.last_name}</h2>
+        <p>Click on the link to reset your password.</p>
+        <p>${url}</h1>
+        </div>`
+  
+      await sendVerificationEmail(email, subject, body)
+    }
+    return responseHelper.successResponse(
+      res,
+      StatusCodes.OK,
+    )(
+      'An Email with link to reset your password has been sent to you email id',
+    )  
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+const checkPassword = async (req: Request, res: Response) => {
+  try {
+    const userInfo = await user.get(req.body);
+    const password = authHelper.authenticatePassword(req.body.password, userInfo?.password)
+    if(password){
+      return responseHelper.successResponse(res, StatusCodes.OK)("Ok");
+    }  else{
+      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("Password Incorrect");
+    }
+         
 } catch (error) {
   responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
 }
@@ -403,9 +317,7 @@ export default {
   updaterUserInfo,
   getUser,
   verifyOtp,
-  appliedJobs,
-  savedJobs,
-  getSavedJobs,
-  getAppliedJobs,
-  resendOtp
+  resendOtp,
+  checkPassword,
+  forgotPassword
 }

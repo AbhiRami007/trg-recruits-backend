@@ -5,21 +5,21 @@ import multers3 from 'multer-s3'
 import AWS from 'aws-sdk'
 import path from 'path';
 import user from '../services/user';
+import { CONFIG } from '../config/env';
 
 AWS.config.update({
-    region: process.env.AWS_ACCOUNT_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: CONFIG.AWS_ACCOUNT_REGION,
+    accessKeyId: CONFIG.AWS_ACCESS_KEY,
+    secretAccessKey: CONFIG.AWS_SECRET_ACCESS_KEY,
 });
 
-const bucket: any = process.env.AWS_S3_BUCKET;
+const bucket: any = CONFIG.AWS_S3_BUCKET;
 const s3 = new AWS.S3();
 
 const uploadFile = multer({
     storage: multers3({
         bucket,
         s3,
-        // acl: "public-read",
         key: async (req,file, cb) => {
                 const userData=await user.get(req.params)
                 if (userData) {
@@ -29,8 +29,7 @@ const uploadFile = multer({
                 }
         }
     }),
-     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
-    // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
+     limits: { fileSize: 1024 * 1024 * 50 },
     fileFilter: function (_req, file, cb) {
         const filetypes = /pdf|doc|txt/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());

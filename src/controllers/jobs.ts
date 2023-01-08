@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import responseHelper from '../utils/responseHelper';
 import {StatusCodes} from 'http-status-codes';
 import jobs from '../services/jobs';
+import user from '../services/user';
 
 const createJobs = async (req: Request, res: Response) => {
   try {
@@ -79,6 +80,70 @@ const removeJob = async (req: Request, res: Response) => {
   }
 };
 
+const appliedJobs = async (req: Request, res: Response) => {
+  try {
+    const isApplied = await user.getById(req.params.id); 
+    if(isApplied?.applied_jobs.includes(req.body.applied_jobs)){
+      return responseHelper.successResponse(res, StatusCodes.OK)("Already Applied");
+    }  
+    isApplied?.applied_jobs.push(req.body.applied_jobs);
+    req.body.applied_jobs=isApplied?.applied_jobs;
+    const applied = await user.update(req.body, req.params.id)
+      if(applied){
+        return responseHelper.successResponse(res, StatusCodes.OK)("Application Sent");
+      }      
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+
+const savedJobs = async (req: Request, res: Response) => {
+  try {
+    const isSaved = await user.getById(req.params.id); 
+    if(isSaved?.saved_jobs.includes(req.body.saved_jobs)){
+      return responseHelper.successResponse(res, StatusCodes.OK)("Already Saved");
+    }  
+    isSaved?.saved_jobs.push(req.body.saved_jobs)
+    req.body.saved_jobs=isSaved?.saved_jobs
+    const saved = await user.update(req.body, req.params.id)
+      if(saved){
+        return responseHelper.successResponse(res, StatusCodes.OK)("Saved");
+      }      
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+
+const getSavedJobs = async (req: Request, res: Response) => {
+  try {
+    const userInfo = await user.getById(req.params.id);
+    const jobsData = await jobs.listJobsById(userInfo?.saved_jobs); 
+    if(jobsData){
+      return responseHelper.successResponse(res, StatusCodes.OK)("Saved Jobs List", jobsData);
+    }  else{
+      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("No Jobs Saved");
+    }
+         
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+
+const getAppliedJobs = async (req: Request, res: Response) => {
+  try {
+    const userInfo = await user.getById(req.params.id);
+    const jobsData = await jobs.listJobsById(userInfo?.applied_jobs); 
+    if(jobsData){
+      return responseHelper.successResponse(res, StatusCodes.OK)("Applied Jobs List", jobsData);
+    }  else{
+      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("No Jobs Applied");
+    }
+         
+} catch (error) {
+  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
+}
+};
+
 
 
 
@@ -91,5 +156,9 @@ export default {
     getJobsByLocationOrTitle,
     getJobsById,
     updateJob,
-    removeJob
+    removeJob,
+    appliedJobs,
+    savedJobs,
+    getAppliedJobs,
+    getSavedJobs
 };

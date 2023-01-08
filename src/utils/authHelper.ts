@@ -15,6 +15,10 @@ const createRefreshToken = (body) => {
   });
 };
 
+const hashData = (data)=>{
+  return bcrypt.hash(data,  Number(CONFIG.SALT))
+}
+
 const authenticatePassword = (currentPassword, userPassword) => {
   return bcrypt.compareSync(currentPassword, userPassword);
 };
@@ -37,4 +41,5 @@ export default {
   authenticatePassword,
   createProjectAccessKey,
   checkProjectAccess,
+  hashData
 };

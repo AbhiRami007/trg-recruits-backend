@@ -59,27 +59,35 @@ const uploadImage = (req: any, res: any) => {
   }
 }
 
+
+
 const getImage = async (req: any, res: any) => {
   const file = req.params.image
-  var promise = s3.getSignedUrlPromise('getObject', {
-    Bucket: bucket,
+  async function getImage() {
+    const data = s3
+      .getObject({
+        Bucket: bucket,
     Key: req.params.user + '/' + file,
-    ExpiresIn:9999999999
-  })
-  promise.then(
-    function (url) {
-      return responseHelper.successResponse(res, StatusCodes.OK)(
-        'Profile Picture fetched',
-        url,
-      )
-    },
-    function (err) {
-      return responseHelper.errorResponse(
-        res,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      )(err)
-    },
-  )
+      })
+      .promise();
+    return data;
+  }
+
+  getImage()
+    .then((img) => {
+      let image =
+        "<img className='image-input-wrapper w-125px h-125px' src='data:image/jpeg;base64," + encode(img.Body) + "'" + "/>";
+      res.send(image);
+    })
+    .catch((e) => {
+      res.send(e);
+    });
+
+  function encode(data) {
+    let buf = Buffer.from(data);
+    let base64 = buf.toString("base64");
+    return base64;
+  }
 }
 
 const deleteFile = async (req: any, res: any) => {

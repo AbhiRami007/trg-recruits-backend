@@ -12,43 +12,18 @@ const create = async (params) => {
   });
 };
 
-const get = async (user) => {
+const get = async (email) => {
   return DB.User.findOne({
-    // attributes: ['id', 'first_name', 'last_name', 'email', 'password','role'],
     where: {
       email: {
-        [Op.eq]: user.email,
+        [Op.eq]: email,
       },
     },
   });
 };
 
-const getById = async (user) => {
+const getById = async (id) => {
   return DB.User.findOne({
-    // attributes: ['id', 'first_name', 'last_name', 'email', 'password','role'],
-    where: {
-      id: {
-        [Op.eq]: user,
-      },
-    },
-  });
-};
-
-
-const update = async (user) => {
-  return DB.User.update({is_user_verified:true}, {
-    where: {
-      id: {
-        [Op.eq]: user,
-      },
-    },
-  });
-};
-
-
-const updateOtp = async (otpObj, id) => {
-  
-  return DB.User.update(otpObj, {
     where: {
       id: {
         [Op.eq]: id,
@@ -57,43 +32,32 @@ const updateOtp = async (otpObj, id) => {
   });
 };
 
-const updateUserInfo = async (req) => {
-  return DB.User.update(req.body, {
+
+const update = async (body, id) => {
+  return DB.User.update(body, {
     where: {
       id: {
-        [Op.eq]: req.params.id,
+        [Op.eq]: id,
       },
     },
   });
 };
 
-const updateUserActive = async (user) => {
-  return DB.User.update({isActive:true}, {
+const updateByEmail = async (body, email) => {
+  return DB.User.update(body, {
     where: {
       email: {
-        [Op.eq]: user,
+        [Op.eq]: email,
       },
     },
   });
 };
 
-const updateAppliedSaved = async (body,user) => {
-  return DB.User.update({body}, {
-    where: {
-      email: {
-        [Op.eq]: user,
-      },
-    },
-  });
-};
 
 export default {
   create,
   get,
-  updateUserInfo,
   update,
   getById,
-  updateOtp,
-  updateAppliedSaved,
-  updateUserActive
+  updateByEmail
 };

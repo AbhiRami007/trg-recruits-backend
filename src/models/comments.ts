@@ -4,7 +4,7 @@ export class Comments extends Model {
   public id: number;
   public email: string;
   public comments: Array<string>;
-  public isDelete: boolean;
+  public is_delete: boolean;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -25,8 +25,8 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'comments',
         type: dataTypes.ARRAY(DataTypes.STRING)
           },
-      isDelete: {
-        field: 'isDelete',
+      is_delete: {
+        field: 'is_delete',
         type: dataTypes.BOOLEAN,
         defaultValue: false,
       }

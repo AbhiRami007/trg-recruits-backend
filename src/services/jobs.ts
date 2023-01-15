@@ -1,5 +1,5 @@
-import sequelize from 'sequelize';
-import DB from '../models/index';
+import sequelize from "sequelize";
+import DB from "../models/index";
 const Op = sequelize.Op;
 
 const create = async (params) => {
@@ -9,26 +9,25 @@ const create = async (params) => {
 };
 
 const get = async (searchTerm, location) => {
-    return DB.Jobs.findAll({
-        where: {
-            [Op.and]: {
+  return DB.Jobs.findAll({
+    where: {
+      [Op.and]: {
         location: {
-            [Op.eq]: location,
+          [Op.eq]: location,
         },
         title: {
-            [Op.eq]: searchTerm,
+          [Op.eq]: searchTerm,
         },
-                
-    }
+      },
     },
   });
 };
 
 const getByTitle = async (title) => {
-    return DB.Jobs.findAll({
-        where: {
-          title
-      }
+  return DB.Jobs.findAll({
+    where: {
+      title,
+    },
   });
 };
 
@@ -45,13 +44,12 @@ const getById = async (id) => {
 const list = async () => {
   return DB.Jobs.findAndCountAll({
     where: {
-      isDelete: false,
+      is_delete: false,
     },
   });
 };
 
-
-const update = async (id,job) => {
+const update = async (id, job) => {
   return DB.Jobs.update(job, {
     where: {
       id: {
@@ -63,23 +61,23 @@ const update = async (id,job) => {
 
 const remove = async (id: any) => {
   return DB.Jobs.update(
-    {isDelete: true, isActive: false},
+    { is_delete: true, is_active: false },
     {
       where: {
         id: {
           [Op.eq]: id,
         },
       },
-    },
+    }
   );
 };
 
 const listJobsById = async (req) => {
   return DB.Jobs.findAndCountAll({
     where: {
-      id:{
-        [Op.in]:req
-      }
+      id: {
+        [Op.in]: req,
+      },
     },
   });
 };
@@ -89,8 +87,8 @@ export default {
   get,
   remove,
   update,
-    getById,
-    getByTitle,
+  getById,
+  getByTitle,
   list,
-  listJobsById
+  listJobsById,
 };

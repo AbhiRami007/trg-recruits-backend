@@ -4,8 +4,8 @@ export class TrackStatus extends Model {
     public id: number;
     public email:string;
     public jobId:number;
-    public isDelete: boolean;
-    public isActive: boolean;
+    public is_delete: boolean;
+    public is_active: boolean;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -32,13 +32,13 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'status',
         type: dataTypes.ARRAY(DataTypes.STRING),
       },
-      isDelete: {
-        field: 'isDelete',
+      is_delete: {
+        field: 'is_delete',
         type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
-      isActive: {
-        field: 'isActive',
+      is_active: {
+        field: 'is_active',
         type: dataTypes.BOOLEAN,
         defaultValue: true,
       },

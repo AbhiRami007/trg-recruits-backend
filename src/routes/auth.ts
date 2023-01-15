@@ -1,22 +1,22 @@
-import {Router} from 'express';
-import {RouteMethodWrapper} from '../types/router';
-import {mapMethodsToRouter} from '../utils/routerHelper';
-import authController from '../controllers/auth';
+import { Router } from "express";
+import { RouteMethodWrapper } from "../types/router";
+import { mapMethodsToRouter } from "../utils/routerHelper";
+import authController from "../controllers/auth";
 const authenticationRouter: Router = Router({
   mergeParams: true,
 });
 
 const authenticationRoutes: any = {
-  login: '/login',
-  register: '/register',
-  verify: '/verify_token',
-  verifyStatus: '/verify/:id',
-  updateUser: '/update/:id',
-  getUser:'/id/:id',
-  verifyotp:'/verify-otp',
-  resend:'/resend-otp',
-  forgotPass:'/forgot-password',
-  checkPass:'/check-password'
+  login: "/login",
+  register: "/register",
+  verify: "/verify_token",
+  verifyStatus: "/verify/:id",
+  updateUser: "/update/:id",
+  getUser: "/id/:id",
+  verifyotp: "/verify-otp",
+  resend: "/resend-otp",
+  forgotPass: "/forgot-password",
+  checkPass: "/check-password",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -25,17 +25,18 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.login,
-        restMethod: 'POST',
+        restMethod: "POST",
         noAuth: true,
       },
     ],
   },
+
   {
     route: authenticationRoutes.forgotPass,
     methods: [
       {
         control: authController.forgotPassword,
-        restMethod: 'POST',
+        restMethod: "POST",
         noAuth: true,
       },
     ],
@@ -45,7 +46,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.register,
-        restMethod: 'POST',
+        restMethod: "POST",
         noAuth: true,
       },
     ],
@@ -55,7 +56,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.verify,
-        restMethod: 'POST',
+        restMethod: "POST",
         noAuth: true,
       },
     ],
@@ -65,27 +66,27 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.verifyRegistration,
-        restMethod: 'PUT',
+        restMethod: "PUT",
         noAuth: true,
       },
     ],
   },
-   {
+  {
     route: authenticationRoutes.updateUser,
     methods: [
       {
         control: authController.updaterUserInfo,
-        restMethod: 'PUT',
+        restMethod: "PUT",
         noAuth: true,
       },
     ],
   },
-   {
+  {
     route: authenticationRoutes.getUser,
     methods: [
       {
         control: authController.getUser,
-        restMethod: 'GET',
+        restMethod: "GET",
         noAuth: true,
       },
     ],
@@ -95,7 +96,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.verifyOtp,
-        restMethod: 'PUT',
+        restMethod: "PUT",
         noAuth: true,
       },
     ],
@@ -105,7 +106,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.resendOtp,
-        restMethod: 'PUT',
+        restMethod: "PUT",
         noAuth: true,
       },
     ],
@@ -115,7 +116,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.checkPassword,
-        restMethod: 'POST',
+        restMethod: "POST",
         noAuth: true,
       },
     ],

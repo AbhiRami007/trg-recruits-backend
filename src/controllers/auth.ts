@@ -1,312 +1,320 @@
-import { Request, Response } from 'express'
-import authHelper from '../utils/authHelper'
-import responseHelper from '../utils/responseHelper'
-import user from '../services/user'
-import { StatusCodes } from 'http-status-codes'
-import { User } from '../models/user'
-import { validateUser } from '../validators/userValidation'
-import authentication from '../middlewares/authentication'
-import { otpGenerator } from '../utils/otp'
-import { sendVerificationEmail } from '../utils/email'
-import { CONFIG } from '../config/env'
-
+import { Request, Response } from "express";
+import authHelper from "../utils/authHelper";
+import responseHelper from "../utils/responseHelper";
+import user from "../services/user";
+import { StatusCodes } from "http-status-codes";
+import { User } from "../models/user";
+import { validateUser } from "../validators/userValidation";
+import authentication from "../middlewares/authentication";
+import { otpGenerator } from "../utils/otp";
+import { sendVerificationEmail } from "../utils/email";
+import { CONFIG } from "../config/env";
 
 const login = async (req: Request, res: Response) => {
   try {
-    const userRes: User | null = await user.get(req.body)
-    if (!userRes) {
+    const userRes: User | null = await user.get(req.body.email);
+    if (!userRes || !userRes.dataValues.is_active) {
       return responseHelper.errorResponse(
         res,
-        StatusCodes.NOT_FOUND,
-      )('No User Found')
-    } else if (!userRes.dataValues.isActive) {
-      return responseHelper.errorResponse(
-        res,
-        StatusCodes.FORBIDDEN,
-      )('User not verified')
+        StatusCodes.NOT_FOUND
+      )("No User Found");
     } else {
       const passwordMatch: any = authHelper.authenticatePassword(
         req.body.password,
-        userRes?.password,
-      )
+        userRes?.password
+      );
       if (!passwordMatch) {
         return responseHelper.errorResponse(
           res,
-          StatusCodes.UNAUTHORIZED,
-        )('Incorrect Email or Password')
+          StatusCodes.UNAUTHORIZED
+        )("Incorrect Email or Password");
       }
-      const tokenData = await authentication.generateToken(userRes, res) 
+      const tokenData = await authentication.generateToken(userRes, res);
       if (tokenData) {
         responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
           tokenData.accessToken,
           tokenData.refreshToken,
           tokenData.userId
-        )
+        );
       } else {
         responseHelper.errorResponse(
           res,
-          StatusCodes.UNAUTHORIZED,
-        )('Authentication Failed')
+          StatusCodes.UNAUTHORIZED
+        )("Authentication Failed");
       }
     }
   } catch (error) {
     responseHelper.errorResponse(
       res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error.errors[0].message)
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
   }
-}
+};
 
 const register = async (req: Request, res: Response) => {
   try {
-    const validate: any = await validateUser(req, res)
+    const validate: any = await validateUser(req, res);
     if (validate.error) {
       return responseHelper.errorResponse(
         res,
-        StatusCodes.BAD_REQUEST,
-      )(validate.error.message)
+        StatusCodes.BAD_REQUEST
+      )(validate.error.message);
     }
-    const userRes: User | null = await user.get(req.body)
+    const userRes: User | null = await user.get(req.body.email);
 
-    if (userRes) {
+    if (userRes && userRes.dataValues.is_active) {
       return responseHelper.errorResponse(
         res,
-        StatusCodes.NOT_FOUND,
-      )('Email already registered!')
+        StatusCodes.NOT_FOUND
+      )("Email already registered!");
     } else if (req.body.password !== req.body.password_confirmation) {
       return responseHelper.errorResponse(
         res,
-        StatusCodes.BAD_REQUEST,
-      )('Password and Confirm password should match!')
+        StatusCodes.BAD_REQUEST
+      )("Password and Confirm password should match!");
     } else {
-      let userData = await user.create(req.body)
+      let userData;
+      if (!userRes?.dataValues) {
+        userData = await user.create(req.body);
+      } else {
+        req.body.password = await authHelper.hashData(req.body.password);
+        await user.update(req.body, userRes?.dataValues.id);
+        userData = await user.getById(userRes?.dataValues.id);
+      }
+
       if (req.body.email) {
         //Generate OTP
         const otpInfo = otpGenerator();
-        const email = req.body.email
-        const subject = 'Verify Email'
+        const email = req.body.email;
+        const subject = "Verify Email";
         const body = `<h1>Email Confirmation</h1>
-          <h2>Hello ${req.body.first_name + ' ' + req.body.last_name}</h2>
+          <h2>Hello ${req.body.name}</h2>
           <p>Thank you for signing up.</p>
           <p>This is your OTP:<h1>${otpInfo.otp}</h1> Valid for 5 mins</p>
           <p>Do not share your OTP with anyone!</p>
-          </div>`
-        await sendVerificationEmail(email, subject, body)
+          </div>`;
+        await sendVerificationEmail(email, subject, body);
         //Create OTP instance in DB
-       await user.update(
-        {
-          otp: await authHelper.hashData(otpInfo.otp) ,
-          expiration_time: otpInfo.expiration_time,
-        },
-        userData.id,
-      )
+        const otp = await authHelper.hashData(otpInfo.otp);
+        await user.update(
+          {
+            otp: otp,
+            expiration_time: otpInfo.expiration_time,
+          },
+          userData.dataValues.id
+        );
       }
-     
-      return responseHelper.successResponse(
-        res,
-        StatusCodes.OK,
-      )(
-        'An Email is sent to your registered mail id, Please verify to proceed!',
-        userData
-      )
-    }
-  } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error)
-  }
-}
 
-const verify = async (req: Request, res: Response, next) => {
-  try {
-    let tokenValidity: any = await authentication.authenticate(req, res, next)
-    if(!tokenValidity){
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        'Login Successful',
-        tokenValidity,
-      )
-    }else{
-      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)(
-        'Login Failed',
-      )
+        "An Email is sent to your registered mail id, Please verify to proceed!",
+        userData.dataValues
+      );
     }
-    
   } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error)
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
-}
+};
+
+const verify = async (req: Request, res: Response) => {
+  try {
+    let data: any = await authentication.authenticate(req, res);
+    if (data) {
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Login Successful",
+        data
+      );
+    } else {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Login Failed");
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
+  }
+};
 
 const verifyRegistration = async (req: Request, res: Response) => {
   try {
-    const userInfo = await user.get(req.params.id)
+    const userInfo = await user.get(req.params.id);
     if (userInfo) {
-      const updateStatus = await user.update({is_user_verified:true},req.params.id)
+      const updateStatus = await user.update(
+        { is_user_verified: true },
+        req.params.id
+      );
       if (updateStatus) {
         return responseHelper.successResponse(
           res,
-          StatusCodes.OK,
-        )('Verification Successful')
+          StatusCodes.OK
+        )("Verification Successful");
       }
     }
   } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error)
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
-}
+};
 
 const updaterUserInfo = async (req: Request, res: Response) => {
   try {
-    const userInfo = await user.getById(req.params.id)
+    const userInfo = await user.getById(req.params.id);
     if (userInfo) {
       let hash: string;
-      if(req.body.password){
-        hash=await authHelper.hashData(req.body.password)
-        req.body.password= hash
+      if (req.body.password) {
+        hash = await authHelper.hashData(req.body.password);
+        req.body.password = hash;
       }
-      const updateStatus = await user.update(req.body, req.params.id)
+      const updateStatus = await user.update(req.body, req.params.id);
       if (updateStatus) {
         return responseHelper.successResponse(
           res,
-          StatusCodes.OK,
-        )('Details Updated Successfully')
+          StatusCodes.OK
+        )("Details Updated Successfully");
       }
     }
   } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error)
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
-}
+};
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const userInfo = await user.getById(req.params.id)
+    const userInfo = await user.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
-      'Details fetched Successfully',
-      userInfo,
-    )
+      "Details fetched Successfully",
+      userInfo
+    );
   } catch (error) {
     responseHelper.errorResponse(
       res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error.errors[0].message)
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
   }
-}
+};
 
 const verifyOtp = async (req: Request, res: Response) => {
   try {
-    let userInfo: any = await user.get(req.body);
+    let userInfo: any = await user.get(req.body.email);
     const otpInfo = await otpGenerator();
     const isExpired = otpInfo.expiration_time;
-    const otp = await authHelper.authenticatePassword(req.body.otp, userInfo?.otp)
-    
-    if(userInfo && otp && userInfo.expiration_time < isExpired ){
-      await user.updateByEmail({isActive:true}, userInfo.email)
+    const otp = await authHelper.authenticatePassword(
+      req.body.otp,
+      userInfo?.otp
+    );
+
+    if (userInfo && otp && userInfo.expiration_time < isExpired) {
+      await user.updateByEmail({ is_active: true }, userInfo.email);
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        'User Verified',
+        "User Verified",
         userInfo
-      )
-    }else if(userInfo && !otp){
-      return responseHelper.errorResponse(res, StatusCodes.OK)(
-        'Otp Invalid',
-      )
-    }else if(userInfo?.expiration_time > isExpired){
-      return responseHelper.errorResponse(res, StatusCodes.OK)(
-        'Otp Expired',
-      )
+      );
+    } else if (userInfo && !otp) {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Otp Invalid");
+    } else if (userInfo?.expiration_time > isExpired) {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Otp Expired");
     }
   } catch (error) {
     responseHelper.errorResponse(
       res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    )(error.errors[0].message)
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
   }
-}
+};
 
 const resendOtp = async (req: Request, res: Response) => {
   try {
-    let userData: any = await user.get(req.body.email)
+    let userData: any = await user.get(req.body.email);
     if (req.body.email) {
       //Generate OTP
       const otpInfo = otpGenerator();
-
       //update email or verify existing email
-      const email = req.body.newemail?req.body.newemail:req.body.email
-      const subject = 'Verify Email'
+      const email = req.body.newemail ? req.body.newemail : req.body.email;
+      const subject = "Verify Email";
       const body = `<h1>Email Confirmation</h1>
-        <h2>Hello ${userData.first_name + ' ' + userData.last_name}</h2>
+        <h2>Hello ${userData.first_name + " " + userData.last_name}</h2>
         <p>Thank you for signing up.</p>
         <p>This is your OTP:<h1>${otpInfo.otp}</h1> Valid for 5 mins</p>
         <p>Do not share your OTP with anyone!</p>
-        </div>`
-      
-      await sendVerificationEmail(email, subject, body)
-  
+        </div>`;
+
+      await sendVerificationEmail(email, subject, body);
+
+      const otp = await authHelper.hashData(otpInfo.otp);
       //OTP instance in DB
       await user.update(
         {
-          otp: otpInfo.otp,
+          otp: otp,
           expiration_time: otpInfo.expiration_time,
         },
-        userData.id,
-      )
-      }
+        userData.id
+      );
+    }
     return responseHelper.successResponse(
       res,
-      StatusCodes.OK,
-    )(
-      'An Email is sent to your registered mail id, Please verify to proceed!',
-    )  
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
+      StatusCodes.OK
+    )("An Email is sent to your registered mail id, Please verify to proceed!");
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
 };
 
 const forgotPassword = async (req: Request, res: Response) => {
   try {
-    let userData: any = await user.get(req.body)
-    const url=`${CONFIG.REACT_BASE_URL}/auth/password-reset/${userData.id}`
-    if (req.body.email) {  
-      const email = req.body.email
-      const subject = 'Password Reset'
+    let userData: any = await user.get(req.body);
+    const url = `${CONFIG.REACT_BASE_URL}/auth/password-reset/${userData.id}`;
+    if (req.body.email) {
+      const email = req.body.email;
+      const subject = "Password Reset";
       const body = `<h1>Password Reset Link </h1>
-        <h2>Hello ${userData.first_name + ' ' + userData.last_name}</h2>
+        <h2>Hello ${userData.first_name + " " + userData.last_name}</h2>
         <p>Click on the link to reset your password.</p>
         <p>${url}</h1>
-        </div>`
-  
-      await sendVerificationEmail(email, subject, body)
+        </div>`;
+
+      await sendVerificationEmail(email, subject, body);
     }
     return responseHelper.successResponse(
       res,
-      StatusCodes.OK,
+      StatusCodes.OK
     )(
-      'An Email with link to reset your password has been sent to you email id',
-    )  
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
+      "An Email with link to reset your password has been sent to you email id"
+    );
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
 };
 const checkPassword = async (req: Request, res: Response) => {
   try {
     const userInfo = await user.get(req.body);
-    const password = authHelper.authenticatePassword(req.body.password, userInfo?.password)
-    if(password){
+    const password = authHelper.authenticatePassword(
+      req.body.password,
+      userInfo?.password
+    );
+    if (password) {
       return responseHelper.successResponse(res, StatusCodes.OK)("Ok");
-    }  else{
-      return responseHelper.errorResponse(res, StatusCodes.BAD_REQUEST)("Password Incorrect");
+    } else {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Password Incorrect");
     }
-         
-} catch (error) {
-  responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error.errors[0].message);
-}
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
 };
 
 export default {
@@ -319,5 +327,5 @@ export default {
   verifyOtp,
   resendOtp,
   checkPassword,
-  forgotPassword
-}
+  forgotPassword,
+};

@@ -1,8 +1,8 @@
-import {config} from 'dotenv';
+import { config } from "dotenv";
 
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
 
-export const CONFIG: any= {
+export const CONFIG: any = {
   ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   LOG_LEVEL: process.env.LOG_LEVEL,
@@ -17,6 +17,14 @@ export const CONFIG: any= {
   TYPEORM_MIGRATIONS_RUN: process.env.TYPEORM_MIGRATIONS_RUN,
   TYPEORM_MIGRATIONS_DIR: process.env.TYPEORM_MIGRATIONS_DIR,
 
+  GOOGLE: {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri: process.env.GOOGLE_REDIRECT_URI,
+    developerToken: process.env.GOOGLE_DEVELOPER_TOKEN,
+    cookieKey: process.env.GOOGLE_COOKIE_KEY,
+  },
+
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN,
@@ -27,14 +35,14 @@ export const CONFIG: any= {
   AWS_ACCOUNT_REGION: process.env.AWS_ACCOUNT_REGION,
   AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
 
-  SENDGRID_API_KEY: process.env.AWS_S3_BUCKET,
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SALT: process.env.SALT,
-  HOST:process.env.HOST,
-  SERVICE:process.env.SERVICE,
-  EMAIL_PORT:process.env.EMAIL_PORT, 
-  SECURE:process.env.SECURE,
-  USER:process.env.USER,
-  PASS:process.env.PASS,
+  HOST: process.env.HOST,
+  SERVICE: process.env.SERVICE,
+  EMAIL_PORT: process.env.EMAIL_PORT,
+  SECURE: process.env.SECURE,
+  USER: process.env.USER,
+  PASS: process.env.PASS,
   REACT_BASE_URL: process.env.REACT_BASE_URL,
   API_SECRET: process.env.API_SECRET,
   BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
@@ -42,7 +50,7 @@ export const CONFIG: any= {
   BASE_URL: process.env.BASE_URL,
   BASE_PATH: process.env.BASE_PATH,
 };
-export const apiPrefix: any={
-  prefix: '/api/v1',
+export const apiPrefix: any = {
+  prefix: "/api/v1",
 };
-config({path: envFile});
+config({ path: envFile });

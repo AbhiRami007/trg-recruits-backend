@@ -17,6 +17,7 @@ const authenticationRoutes: any = {
   resend: "/resend-otp",
   forgotPass: "/forgot-password",
   checkPass: "/check-password",
+  google: "/google/login",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -26,6 +27,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: authController.login,
         restMethod: "POST",
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.google,
+    methods: [
+      {
+        control: authController.googleLogin,
+        restMethod: "GET",
         noAuth: true,
       },
     ],

@@ -1,12 +1,14 @@
-import sequelize from 'sequelize';
-import DB from '../models/index';
+import sequelize from "sequelize";
+import DB from "../models/index";
 const Op = sequelize.Op;
-import bcrypt from 'bcryptjs';
-import { CONFIG } from '../config/env';
+import bcrypt from "bcryptjs";
+import { CONFIG } from "../config/env";
 
 const create = async (params) => {
-  const hash=await bcrypt.hash(params.password,  Number(CONFIG.SALT))
-  params={...params, password: hash}
+  if (params.password) {
+    const hash = await bcrypt.hash(params.password, Number(CONFIG.SALT));
+    params = { ...params, password: hash };
+  }
   return await DB.User.create({
     ...params,
   });
@@ -32,7 +34,6 @@ const getById = async (id) => {
   });
 };
 
-
 const update = async (body, id) => {
   return DB.User.update(body, {
     where: {
@@ -53,11 +54,10 @@ const updateByEmail = async (body, email) => {
   });
 };
 
-
 export default {
   create,
   get,
   update,
   getById,
-  updateByEmail
+  updateByEmail,
 };

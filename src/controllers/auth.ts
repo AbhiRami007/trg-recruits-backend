@@ -7,8 +7,22 @@ import { User } from "../models/user";
 import { validateUser } from "../validators/userValidation";
 import authentication from "../middlewares/authentication";
 import { otpGenerator } from "../utils/otp";
+import { OAuth2Client } from "google-auth-library";
 import { sendVerificationEmail } from "../utils/email";
 import { CONFIG } from "../config/env";
+import axios from "axios";
+
+const keys = CONFIG.GOOGLE;
+const oAuth2Client = new OAuth2Client(
+  keys.clientId,
+  keys.clientSecret,
+  keys.redirectUri
+);
+
+const getAccessToken = async (code) => {
+  const { tokens } = await oAuth2Client.getToken(code);
+  return tokens;
+};
 
 const login = async (req: Request, res: Response) => {
   try {
@@ -48,6 +62,40 @@ const login = async (req: Request, res: Response) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR
     )(error.errors[0].message);
+  }
+};
+
+const googleLogin = async (req: Request, res: Response) => {
+  try {
+    const token = await getAccessToken(req.query.code);
+    const { data } = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/userinfo?alt=json&access_token=${token.access_token}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Accept-Encoding": "identity",
+        },
+      }
+    );
+    let userData = await user.get(data.email);
+    if (!userData) {
+      const reqBody = {
+        name: data.given_name + " " + data.family_name,
+        email: data.email,
+        avatar: data.picture,
+      };
+      userData = await user.create(reqBody);
+    }
+    const tokenData = await authentication.generateToken(userData, res);
+    if (tokenData) {
+      responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
+        tokenData.accessToken,
+        tokenData.refreshToken,
+        tokenData.userId
+      );
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
 };
 
@@ -328,4 +376,5 @@ export default {
   resendOtp,
   checkPassword,
   forgotPassword,
+  googleLogin,
 };

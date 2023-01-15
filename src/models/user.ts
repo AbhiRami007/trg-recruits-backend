@@ -75,7 +75,6 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       password: {
         field: "password",
-        allowNull: false,
         type: dataTypes.STRING(200),
       },
       address: {

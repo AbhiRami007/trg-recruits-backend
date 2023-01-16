@@ -17,6 +17,7 @@ export class User extends Model {
   public position: string;
   public otp: number;
   public expiration_time: Date;
+  public joined_on: Date;
   public applied_jobs: Array<string>;
   public saved_jobs: Array<string>;
   public online: boolean;
@@ -129,6 +130,10 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       saved_jobs: {
         field: "saved_jobs",
         type: dataTypes.ARRAY(DataTypes.STRING),
+      },
+      joined_on: {
+        field: "joined_on",
+        type: dataTypes.DATE,
       },
     },
     {

@@ -18,6 +18,7 @@ const authenticationRoutes: any = {
   forgotPass: "/forgot-password",
   checkPass: "/check-password",
   google: "/google/login",
+  alUsers: "/list",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -97,6 +98,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
     methods: [
       {
         control: authController.getUser,
+        restMethod: "GET",
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.allUsers,
+    methods: [
+      {
+        control: authController.getAllUsers,
         restMethod: "GET",
         noAuth: true,
       },

@@ -1,5 +1,5 @@
-'use strict';
-import {DataTypes, Model, Sequelize} from 'sequelize';
+"use strict";
+import { DataTypes, Model, Sequelize } from "sequelize";
 export class Comments extends Model {
   public id: number;
   public email: string;
@@ -11,31 +11,36 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Comments.init(
     {
       id: {
-        field: 'id',
+        field: "id",
         type: dataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
       email: {
         allowNull: false,
-        field: 'email',
+        field: "email",
         type: dataTypes.STRING(200),
       },
-        comments: {
-        field: 'comments',
-        type: dataTypes.ARRAY(DataTypes.STRING)
-          },
+      comments: {
+        field: "comments",
+        type: dataTypes.ARRAY(DataTypes.STRING),
+      },
+      is_new: {
+        field: "is_new",
+        type: dataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       is_delete: {
-        field: 'is_delete',
+        field: "is_delete",
         type: dataTypes.BOOLEAN,
         defaultValue: false,
-      }
+      },
     },
     {
       sequelize,
       timestamps: false,
-      tableName: 'comments',
-    },
+      tableName: "comments",
+    }
   );
   return Comments;
 };

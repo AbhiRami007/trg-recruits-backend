@@ -54,10 +54,21 @@ const updateByEmail = async (body, email) => {
   });
 };
 
+const list = async () => {
+  return DB.User.findAndCountAll({
+    where: {
+      role: {
+        [Op.eq]: "candidate",
+      },
+    },
+  });
+};
+
 export default {
   create,
   get,
   update,
   getById,
   updateByEmail,
+  list,
 };

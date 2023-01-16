@@ -32,6 +32,11 @@ const login = async (req: Request, res: Response) => {
         res,
         StatusCodes.NOT_FOUND
       )("No User Found");
+    } else if (!userRes?.password) {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.UNAUTHORIZED
+      )("Incorrect Email or Password");
     } else {
       const passwordMatch: any = authHelper.authenticatePassword(
         req.body.password,
@@ -83,6 +88,8 @@ const googleLogin = async (req: Request, res: Response) => {
         name: data.given_name + " " + data.family_name,
         email: data.email,
         avatar: data.picture,
+        is_active: true,
+        is_user_verified: data.email_verified,
       };
       userData = await user.create(reqBody);
     }
@@ -110,7 +117,7 @@ const register = async (req: Request, res: Response) => {
     }
     const userRes: User | null = await user.get(req.body.email);
 
-    if (userRes && userRes.dataValues.is_active) {
+    if (userRes && userRes.is_active) {
       return responseHelper.errorResponse(
         res,
         StatusCodes.NOT_FOUND
@@ -122,12 +129,12 @@ const register = async (req: Request, res: Response) => {
       )("Password and Confirm password should match!");
     } else {
       let userData;
-      if (!userRes?.dataValues) {
+      if (!userRes) {
         userData = await user.create(req.body);
       } else {
         req.body.password = await authHelper.hashData(req.body.password);
-        await user.update(req.body, userRes?.dataValues.id);
-        userData = await user.getById(userRes?.dataValues.id);
+        await user.update(req.body, userRes.id);
+        userData = await user.getById(userRes.id);
       }
 
       if (req.body.email) {
@@ -365,6 +372,21 @@ const checkPassword = async (req: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (_req: Request, res: Response) => {
+  try {
+    const userInfo = await user.list();
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      "Details fetched Successfully",
+      userInfo
+    );
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
+};
+
 export default {
   login,
   register,
@@ -377,4 +399,5 @@ export default {
   checkPassword,
   forgotPassword,
   googleLogin,
+  getAllUsers,
 };

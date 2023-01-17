@@ -127,6 +127,13 @@ const register = async (req: Request, res: Response) => {
         res,
         StatusCodes.BAD_REQUEST
       )("Password and Confirm password should match!");
+    } else if (req.body.role === "recruiter") {
+      const data = { ...req.body, is_active: true, is_user_verified: true };
+      const userData = await user.create(data);
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Registered",
+        userData
+      );
     } else {
       let userData;
       if (!userRes) {

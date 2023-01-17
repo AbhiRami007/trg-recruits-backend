@@ -18,7 +18,7 @@ const authenticationRoutes: any = {
   forgotPass: "/forgot-password",
   checkPass: "/check-password",
   google: "/google/login",
-  alUsers: "/list",
+  allUsers: "/list",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [

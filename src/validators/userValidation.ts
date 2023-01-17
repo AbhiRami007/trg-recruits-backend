@@ -10,6 +10,7 @@ const validateUser = async (req, res) => {
       email: Joi.string().email().required(),
       password: Joi.string().required(),
       password_confirmation: Joi.string().required(),
+      role: Joi.optional(),
     });
     const result = await schema.validate(req.body);
     return result;

@@ -2,8 +2,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 export class User extends Model {
   public id: number;
-  public first_name: string;
-  public last_name: string;
+  public name: string;
   public email: string;
   public phone: number;
   public company: string;
@@ -15,6 +14,7 @@ export class User extends Model {
   public address: string;
   public avatar: string;
   public position: string;
+  public status: string;
   public otp: number;
   public expiration_time: Date;
   public joined_on: Date;
@@ -109,6 +109,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: "is_delete",
         type: dataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      status: {
+        field: "status",
+        type: dataTypes.STRING(100),
+        defaultValue: "pending",
       },
       is_active: {
         field: "is_active",

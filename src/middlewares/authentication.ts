@@ -2,6 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import jwtDecode from "jwt-decode";
 import { CONFIG } from "../config/env";
+import admin from "../services/admin";
+import client from "../services/client";
 import user from "../services/user";
 import { TokenData } from "../types/jwt";
 import authHelper from "../utils/authHelper";
@@ -28,7 +30,7 @@ const generateToken = async (req, res) => {
   }
 };
 
-const authenticate = async (req, res) => {
+const authenticate = async (req, res, type) => {
   try {
     const accessToken: any = req.headers["authorization"]
       .replace("Bearer ", "")
@@ -74,7 +76,14 @@ const authenticate = async (req, res) => {
       accessToken,
       CONFIG.JWT_ACCESS_SECRET
     );
-    const userData = await user.get(verifyUser.email);
+    let userData;
+    if (type == "admin") {
+      userData = await admin.get(verifyUser.email);
+    } else if (type == "client") {
+      userData = await client.get(verifyUser.email);
+    } else {
+      userData = await user.get(verifyUser.email);
+    }
     if (!userData) {
       return responseHelper.errorResponse(
         res,

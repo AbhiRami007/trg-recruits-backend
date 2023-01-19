@@ -11,6 +11,7 @@ const validateUser = async (req, res) => {
       password: Joi.string().required(),
       password_confirmation: Joi.string().required(),
       role: Joi.optional(),
+      joined_on: Joi.date().required(),
     });
     const result = await schema.validate(req.body);
     return result;

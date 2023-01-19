@@ -34,6 +34,16 @@ const getById = async (id) => {
   });
 };
 
+const getByIds = async (id) => {
+  return DB.User.findAndCountAll({
+    where: {
+      id: {
+        [Op.in]: id,
+      },
+    },
+  });
+};
+
 const update = async (body, id) => {
   return DB.User.update(body, {
     where: {
@@ -57,8 +67,13 @@ const updateByEmail = async (body, email) => {
 const list = async () => {
   return DB.User.findAndCountAll({
     where: {
-      role: {
-        [Op.eq]: "candidate",
+      [Op.and]: {
+        role: {
+          [Op.eq]: "candidate",
+        },
+        is_delete: {
+          [Op.eq]: false,
+        },
       },
     },
   });
@@ -71,4 +86,5 @@ export default {
   getById,
   updateByEmail,
   list,
+  getByIds,
 };

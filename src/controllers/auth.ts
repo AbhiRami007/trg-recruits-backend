@@ -27,7 +27,11 @@ const getAccessToken = async (code) => {
 const login = async (req: Request, res: Response) => {
   try {
     const userRes: User | null = await user.get(req.body.email);
-    if (!userRes || !userRes.dataValues.is_active) {
+    if (
+      !userRes ||
+      !userRes.dataValues.is_active ||
+      userRes.dataValues.is_delete
+    ) {
       return responseHelper.errorResponse(
         res,
         StatusCodes.NOT_FOUND
@@ -90,6 +94,7 @@ const googleLogin = async (req: Request, res: Response) => {
         avatar: data.picture,
         is_active: true,
         is_user_verified: data.email_verified,
+        joined_on: new Date(),
       };
       userData = await user.create(reqBody);
     }
@@ -179,7 +184,7 @@ const register = async (req: Request, res: Response) => {
 
 const verify = async (req: Request, res: Response) => {
   try {
-    let data: any = await authentication.authenticate(req, res);
+    let data: any = await authentication.authenticate(req, res, 'candidate');
     if (data) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
         "Login Successful",

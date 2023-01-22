@@ -1,18 +1,18 @@
-import path from 'path';
-import {Sequelize} from 'sequelize';
-import {CONFIG} from '../config/env';
-import sequelizeConfig from '../config/sequelize';
-import {DB} from '../types/db';
-import {getFiles} from '../utils/importHelper';
+import path from "path";
+import { Sequelize } from "sequelize";
+import { CONFIG } from "../config/env";
+import sequelizeConfig from "../config/sequelize";
+import { DB } from "../types/db";
+import { getFiles } from "../utils/importHelper";
 const basename = path.basename(module.filename);
-const env = CONFIG.ENV || 'production';
+const env = CONFIG.ENV || "production";
 const config = sequelizeConfig[env];
 
 const database = config.database;
 const user = config.username;
 const pass = config.password;
 const host = config.host;
-const dialect = 'postgres';
+const dialect = "postgres";
 const port = config.port;
 
 const sequelize = new Sequelize({
@@ -22,12 +22,12 @@ const sequelize = new Sequelize({
   host: host,
   port: port,
   dialect: dialect,
-  // dialectOptions: {
-  //   ssl: {
-  //     require: true, // This will help you. But you will see nwe error
-  //     rejectUnauthorized: false // This line will fix new error
-  //   }
-  // },
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false, // This line will fix new error
+    },
+  },
 });
 const db = {
   sequelize,
@@ -36,7 +36,7 @@ const db = {
 const modelFiles: string[] = [];
 (() => {
   for (const f of getFiles(__dirname)) {
-    if (f.includes(basename) && f.split('.')[-1]!=='map') {
+    if (f.includes(basename) && f.split(".")[-1] !== "map") {
       continue;
     }
     modelFiles.push(f);
@@ -46,7 +46,7 @@ const modelFiles: string[] = [];
 for (const file of modelFiles) {
   const model = require(path.join(__dirname, file)).default(
     sequelize,
-    Sequelize,
+    Sequelize
   );
   db[model.name] = model;
 }

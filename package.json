@@ -10,7 +10,7 @@
     "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/app.ts",
     "dev:watch": "nodemon --config nodemon.json && npx sequelize-cli db:seed:all",
     "clean": "rimraf ./build",
-    "build": "npm run clean && tsc && npx sequelize-cli db:seed:all",
+    "build": "npm run clean && tscl",
     "prepush": "npm run build"
   },
   "author": "Abhirami",

@@ -8,7 +8,7 @@
     "start:debug": "DEBUG=express:* DOTENV_CONFIG_PATH=.env node -r dotenv/config ./build/app.js",
     "start:inspect": "DOTENV_CONFIG_PATH=.env node -r dotenv/config --inspect ./build/app.js",
     "dev": "cross-env DOTENV_CONFIG_PATH=.env ts-node -r dotenv/config ./src/app.ts",
-    "dev:watch": "nodemon --config nodemon.json && npx sequelize-cli db:seed:all",
+    "dev:watch": "nodemon --config nodemon.json",
     "clean": "rimraf ./build",
     "build": "npm run clean && tscl",
     "prepush": "npm run build"

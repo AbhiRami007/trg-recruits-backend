@@ -5,6 +5,7 @@ export class Comments extends Model {
   public email: string;
   public comments: Array<string>;
   public is_delete: boolean;
+  public created_on:Date;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -35,6 +36,10 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
+       created_on: {
+        field: "created_on",
+        type: dataTypes.DATE,
+      }
     },
     {
       sequelize,

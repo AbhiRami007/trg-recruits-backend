@@ -15,6 +15,8 @@ export class User extends Model {
   public avatar: string;
   public position: string;
   public status: string;
+  public date_of_birth: string;
+
   public otp: number;
   public expiration_time: Date;
   public joined_on: Date;
@@ -87,6 +89,10 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.STRING(10000),
       },
       position: {
+        field: "position",
+        type: dataTypes.STRING(200),
+      },
+      date_of_birth: {
         field: "position",
         type: dataTypes.STRING(200),
       },

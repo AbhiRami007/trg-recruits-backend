@@ -24,12 +24,12 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.createJobs,
         restMethod: 'POST',
-        noAuth: true,
+ noAuth: true,
       },
       {
         control: jobs.listJobs,
         restMethod: 'GET',
-        noAuth: true,
+ noAuth: true,
       },
     ],
   },
@@ -39,7 +39,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.getJobsByTitle,
         restMethod: 'GET',
-        noAuth: true,
+ noAuth: true,
       },
     ],
     },
@@ -49,12 +49,12 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.getJobsById,
         restMethod: 'GET',
-        noAuth: true,
+ noAuth: true,
       },
       {
         control: jobs.updateJob,
         restMethod: 'PUT',
-        noAuth: true,
+ noAuth: true,
       },
     ],
     },
@@ -64,7 +64,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.getJobsByLocationOrTitle,
         restMethod: 'GET',
-        noAuth: true,
+ noAuth: true,
       },
     ],
     },
@@ -74,7 +74,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.removeJob,
         restMethod: 'PUT',
-        noAuth: true,
+ noAuth: true,
       },
     ],
     },
@@ -84,12 +84,12 @@ const authenticationMethods: RouteMethodWrapper[] = [
         {
           control: jobs.appliedJobs,
           restMethod: 'PUT',
-          noAuth: true,
+ noAuth: true,
         },
         {
           control: jobs.getAppliedJobs,
           restMethod: 'GET',
-          noAuth: true,
+ noAuth: true,
         },
       ],
     },
@@ -99,12 +99,12 @@ const authenticationMethods: RouteMethodWrapper[] = [
         {
           control: jobs.savedJobs,
           restMethod: 'PUT',
-          noAuth: true,
+ noAuth: true,
         },
         {
           control: jobs.getSavedJobs,
           restMethod: 'GET',
-          noAuth: true,
+ noAuth: true,
         },
       ],
     },

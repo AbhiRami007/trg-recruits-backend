@@ -17,6 +17,7 @@ export class Jobs extends Model {
   public preference: Array<string>;
   public working_at: Array<string>;
     public about_company: Array<string>;
+    public created_on:Date;
      public is_delete: boolean;
     public is_active: boolean;
 }
@@ -96,6 +97,10 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: 'about_company',
         type: dataTypes.ARRAY(DataTypes.STRING)
           },
+       created_on: {
+        field: "created_on",
+        type: dataTypes.DATE,
+      },
       is_delete: {
         field: 'is_delete',
         type: dataTypes.BOOLEAN,

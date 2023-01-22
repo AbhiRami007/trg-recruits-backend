@@ -184,7 +184,7 @@ const register = async (req: Request, res: Response) => {
 
 const verify = async (req: Request, res: Response) => {
   try {
-    let data: any = await authentication.authenticate(req, res, 'candidate');
+    let data: any = await authentication.authenticate(req, res, "candidate");
     if (data) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
         "Login Successful",
@@ -243,13 +243,36 @@ const updaterUserInfo = async (req: Request, res: Response) => {
   }
 };
 
-const getUser = async (req: Request, res: Response) => {
+const getUserData = async (req: Request, res: Response) => {
   try {
     const userInfo = await user.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       "Details fetched Successfully",
       userInfo
     );
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
+};
+
+const createNewUser = async (req: Request, res: Response) => {
+  try {
+    const userInfo = await user.get(req.body.email);
+    if (userInfo) {
+      return responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Candidate already exist");
+    } else {
+      const data = await user.create(req.body);
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Candidate Created",
+        data
+      );
+    }
   } catch (error) {
     responseHelper.errorResponse(
       res,
@@ -405,11 +428,12 @@ export default {
   verify,
   verifyRegistration,
   updaterUserInfo,
-  getUser,
+  getUserData,
   verifyOtp,
   resendOtp,
   checkPassword,
   forgotPassword,
   googleLogin,
   getAllUsers,
+  createNewUser,
 };

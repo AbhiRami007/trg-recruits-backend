@@ -7,8 +7,8 @@ const imageRouter: Router = Router({
 });
 
 const uploadRoutes: any = {
-  upload: "/profile/:email",
-  get: "/profile/:user/:image",
+  upload: "/profile/:id",
+  get: "/profile/:id",
   // list:'/list',
 };
 
@@ -20,7 +20,7 @@ const uploadMethods: RouteMethodWrapper[] = [
         control: picturesController.uploadImage,
         restMethod: "POST",
         noAuth: true,
-        param: picturesController.uploadFile.single("file"),
+        param: picturesController.uploadFile.single("image"),
       },
     ],
   },

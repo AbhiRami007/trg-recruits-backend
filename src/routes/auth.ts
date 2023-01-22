@@ -9,7 +9,7 @@ const authenticationRouter: Router = Router({
 const authenticationRoutes: any = {
   login: "/login",
   register: "/register",
-  verify: "/verify_token",
+  verify: "/verify-token",
   verifyStatus: "/verify/:id",
   updateUser: "/update/:id",
   getUser: "/id/:id",
@@ -19,6 +19,7 @@ const authenticationRoutes: any = {
   checkPass: "/check-password",
   google: "/google/login",
   allUsers: "/list",
+  createUser: "/create",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -64,6 +65,16 @@ const authenticationMethods: RouteMethodWrapper[] = [
     ],
   },
   {
+    route: authenticationRoutes.createUser,
+    methods: [
+      {
+        control: authController.createNewUser,
+        restMethod: "POST",
+        noAuth: true,
+      },
+    ],
+  },
+  {
     route: authenticationRoutes.verify,
     methods: [
       {
@@ -97,7 +108,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     route: authenticationRoutes.getUser,
     methods: [
       {
-        control: authController.getUser,
+        control: authController.getUserData,
         restMethod: "GET",
         noAuth: true,
       },

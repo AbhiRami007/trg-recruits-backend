@@ -9,7 +9,7 @@ const adminAuthenticationRouter: Router = Router({
 const authenticationRoutes: any = {
   login: "/login",
   register: "/register",
-  verify: "/verify_token",
+  verify: "/verify-token",
   updateUser: "/update/:id",
   getUser: "/id/:id",
   getUserIds: "/candidates",

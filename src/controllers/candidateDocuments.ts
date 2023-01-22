@@ -62,7 +62,7 @@ const uploadDocument = async (req: any, res: any) => {
       await candidateDocuments.create(reqBody);
     }
     return responseHelper.successResponse(res, StatusCodes.OK)(
-      "Document Added",
+      `${req.params.type} updated`,
       { imagePath: req.file.location }
     );
   } catch (error) {
@@ -106,21 +106,22 @@ const getDocsByIds = async (req: any, res: any) => {
 
 const deleteDocument = async (req: any, res: any) => {
   try {
-    const file = req.params.image;
-    await s3
-      .deleteObject({ Bucket: bucket, Key: req.params.type + "/" + file })
-      .promise();
-
-    await candidateDocuments.update(req.params.id, { is_delete: true });
-    return responseHelper.successResponse(
-      res,
-      StatusCodes.OK
-    )("Document Removed");
+    const documents = await candidateDocuments.getById(req.params.id);
+    const obj = {};
+    let key = req.params.type;
+    obj[key] = "";
+    if (documents) {
+      await candidateDocuments.update(req.params.id, obj);
+    }
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      `${req.params.type} Deleted`,
+      documents
+    );
   } catch (error) {
-    return responseHelper.errorResponse(
+    responseHelper.errorResponse(
       res,
       StatusCodes.INTERNAL_SERVER_ERROR
-    )(error);
+    )(error.errors[0].message);
   }
 };
 

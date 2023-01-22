@@ -21,7 +21,7 @@ const uploadFile = multer({
     s3,
     // acl: "public-read",
     key: async (req, file, cb) => {
-      const userData = await user.get(req.params.id);
+      const userData = await user.getById(req.params.id);
       if (userData) {
         cb(null, file.originalname);
       } else {
@@ -64,7 +64,7 @@ const uploadImage = async (req: any, res: any) => {
 };
 
 const getImage = async (req: any, res: any) => {
- try {
+  try {
     const document = await user.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       "Document fetched",

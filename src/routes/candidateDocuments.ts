@@ -10,6 +10,8 @@ const uploadRoutes: any = {
   upload: "/document/:type/:id",
   get: "/document",
   list: "/document/list",
+  getById: "/document/:id",
+  delete: "/document/:type/:id",
 };
 
 const uploadMethods: RouteMethodWrapper[] = [
@@ -21,6 +23,26 @@ const uploadMethods: RouteMethodWrapper[] = [
         restMethod: "POST",
         noAuth: true,
         param: candidateController.uploadFile.single("file"),
+      },
+    ],
+  },
+  {
+    route: uploadRoutes.getById,
+    methods: [
+      {
+        control: candidateController.getDocument,
+        restMethod: "GET",
+        noAuth: true,
+      },
+    ],
+  },
+  {
+    route: uploadRoutes.delete,
+    methods: [
+      {
+        control: candidateController.deleteDocument,
+        restMethod: "PUT",
+        noAuth: true,
       },
     ],
   },

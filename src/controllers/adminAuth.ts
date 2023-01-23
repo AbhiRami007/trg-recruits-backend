@@ -17,7 +17,7 @@ const keys = CONFIG.GOOGLE;
 const oAuth2Client = new OAuth2Client(
   keys.clientId,
   keys.clientSecret,
-  keys.redirectUri
+  keys.redirectUriAdmin
 );
 
 const getAccessToken = async (code) => {
@@ -83,25 +83,38 @@ const googleLogin = async (req: Request, res: Response) => {
         },
       }
     );
-    let userData = await admin.get(data.email);
-    if (!userData) {
-      const reqBody = {
-        name: data.given_name + " " + data.family_name,
-        email: data.email,
-        avatar: data.picture,
-        is_active: true,
-        is_user_verified: data.email_verified,
-        joined_on: new Date(),
-      };
-      userData = await admin.create(reqBody);
-    }
-    const tokenData = await authentication.generateToken(userData, res);
-    if (tokenData) {
-      responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
-        tokenData.accessToken,
-        tokenData.refreshToken,
-        tokenData.userId
-      );
+    const acceptedEmail = [
+      "akashsasikumar@outlook.com",
+      "therecruitsgroup@gmail.com",
+      "psabhirami015@gmail.com",
+      "abhishekomanakuttansheeba@gmail.com",
+    ];
+    if (acceptedEmail.includes(req.body.email)) {
+      let userData = await admin.get(data.email);
+      if (!userData) {
+        const reqBody = {
+          name: data.given_name + " " + data.family_name,
+          email: data.email,
+          avatar: data.picture,
+          is_active: true,
+          is_user_verified: data.email_verified,
+          joined_on: new Date(),
+        };
+        userData = await admin.create(reqBody);
+      }
+      const tokenData = await authentication.generateToken(userData, res);
+      if (tokenData) {
+        responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
+          tokenData.accessToken,
+          tokenData.refreshToken,
+          tokenData.userId
+        );
+      }
+    } else {
+      responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("This email Id is not recognized");
     }
   } catch (error) {
     responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
@@ -117,27 +130,40 @@ const register = async (req: Request, res: Response) => {
         StatusCodes.BAD_REQUEST
       )(validate.error.message);
     }
-    const userRes: Admin | null = await admin.get(req.body.email);
+    const acceptedEmail = [
+      "akashsasikumar@outlook.com",
+      "therecruitsgroup@gmail.com",
+      "psabhirami015@gmail.com",
+      "abhishekomanakuttansheeba@gmail.com",
+    ];
+    if (acceptedEmail.includes(req.body.email)) {
+      const userRes: Admin | null = await admin.get(req.body.email);
 
-    if (userRes) {
-      return responseHelper.errorResponse(
-        res,
-        StatusCodes.NOT_FOUND
-      )("Email already registered!");
-    } else if (req.body.password !== req.body.password_confirmation) {
-      return responseHelper.errorResponse(
+      if (userRes) {
+        return responseHelper.errorResponse(
+          res,
+          StatusCodes.NOT_FOUND
+        )("Email already registered!");
+      } else if (req.body.password !== req.body.password_confirmation) {
+        return responseHelper.errorResponse(
+          res,
+          StatusCodes.BAD_REQUEST
+        )("Password and Confirm password should match!");
+      } else {
+        let userData;
+        if (!userRes) {
+          userData = await admin.create(req.body);
+        }
+        return responseHelper.successResponse(res, StatusCodes.OK)(
+          "Registered",
+          userData
+        );
+      }
+    } else {
+      responseHelper.errorResponse(
         res,
         StatusCodes.BAD_REQUEST
-      )("Password and Confirm password should match!");
-    } else {
-      let userData;
-      if (!userRes) {
-        userData = await admin.create(req.body);
-      }
-      return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Registered",
-        userData
-      );
+      )("This email Id is not recognized");
     }
   } catch (error) {
     responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);

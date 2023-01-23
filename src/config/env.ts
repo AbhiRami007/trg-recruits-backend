@@ -21,6 +21,8 @@ export const CONFIG: any = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     redirectUri: process.env.GOOGLE_REDIRECT_URI,
+    redirectUriClient: process.env.GOOGLE_REDIRECT_URI_CLIENT,
+    redirectUriAdmin: process.env.GOOGLE_REDIRECT_URI_ADMIN,
     developerToken: process.env.GOOGLE_DEVELOPER_TOKEN,
     cookieKey: process.env.GOOGLE_COOKIE_KEY,
   },

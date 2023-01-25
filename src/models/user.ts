@@ -14,9 +14,9 @@ export class User extends Model {
   public address: string;
   public avatar: string;
   public position: string;
+  public job_type: string;
   public status: string;
   public date_of_birth: string;
-
   public otp: number;
   public expiration_time: Date;
   public joined_on: Date;
@@ -71,6 +71,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       time_zone: {
         field: "time_zone",
         type: dataTypes.STRING(200),
+      },
+      job_type: {
+        field: "job_type",
+        type: dataTypes.STRING(200),
+        defaultValue: "Full Time",
       },
       currency: {
         field: "currency",

@@ -31,8 +31,8 @@ const uploadFile = multer({
     },
   }),
   limits: { fileSize: 1024 * 1024 * 50 },
-  fileFilter: function (_req, file, cb) {
-    const filetypes = /pdf|doc|txt|mp4/;
+  fileFilter: function (req, file, cb) {
+    const filetypes = req.params.type == "video_resume" ? /mp4/ : /pdf|doc|txt/;
     const extname = filetypes.test(
       path.extname(file.originalname).toLowerCase()
     );
@@ -110,11 +110,19 @@ const deleteDocument = async (req: any, res: any) => {
     const obj = {};
     let key = req.params.type;
     obj[key] = "";
+    const file = documents && documents[req.params.type].split("/").pop();
     if (documents) {
       await candidateDocuments.update(req.params.id, obj);
+      await s3
+        .deleteObject({
+          Bucket: bucket,
+          Key: req.params.type + "/" + file,
+        })
+        .promise();
     }
+
     return responseHelper.successResponse(res, StatusCodes.OK)(
-      `${req.params.type} Deleted`,
+      `Deleted`,
       documents
     );
   } catch (error) {

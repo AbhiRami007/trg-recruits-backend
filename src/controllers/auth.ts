@@ -103,7 +103,7 @@ const googleLogin = async (req: Request, res: Response) => {
       responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
         tokenData.accessToken,
         tokenData.refreshToken,
-        tokenData.userId
+        userData
       );
     }
   } catch (error) {
@@ -231,11 +231,12 @@ const updaterUserInfo = async (req: Request, res: Response) => {
         req.body.password = hash;
       }
       const updateStatus = await user.update(req.body, req.params.id);
+      const userData = await user.getById(req.params.id);
       if (updateStatus) {
-        return responseHelper.successResponse(
-          res,
-          StatusCodes.OK
-        )("Details Updated Successfully");
+        return responseHelper.successResponse(res, StatusCodes.OK)(
+          "Details Updated Successfully",
+          userData
+        );
       }
     }
   } catch (error) {

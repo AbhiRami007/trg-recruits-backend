@@ -61,9 +61,10 @@ const uploadDocument = async (req: any, res: any) => {
       };
       await candidateDocuments.create(reqBody);
     }
+    const document = await candidateDocuments.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       `${req.params.type} updated`,
-      { imagePath: req.file.location }
+      document
     );
   } catch (error) {
     return responseHelper.errorResponse(
@@ -106,7 +107,7 @@ const getDocsByIds = async (req: any, res: any) => {
 
 const deleteDocument = async (req: any, res: any) => {
   try {
-    const documents = await candidateDocuments.getById(req.params.id);
+    let documents = await candidateDocuments.getById(req.params.id);
     const obj = {};
     let key = req.params.type;
     obj[key] = "";
@@ -120,7 +121,7 @@ const deleteDocument = async (req: any, res: any) => {
         })
         .promise();
     }
-
+    documents = await candidateDocuments.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       `Deleted`,
       documents

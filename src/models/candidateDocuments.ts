@@ -36,7 +36,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       },
       other_documents: {
         field: "other_documents",
-        type: dataTypes.ARRAY(DataTypes.JSON),
+        type: dataTypes.JSON,
       },
       is_delete: {
         field: "is_delete",

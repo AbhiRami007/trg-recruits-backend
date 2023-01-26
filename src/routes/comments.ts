@@ -17,12 +17,12 @@ const commentMethods: RouteMethodWrapper[] = [
     {
       control: commentsController.createComment,
       restMethod: 'POST',
- noAuth: true,
+//  noAuth: true,
     },
     {
         control: commentsController.getComments,
         restMethod: 'GET',
- noAuth: true,
+//  noAuth: true,
       },
   ],
 },

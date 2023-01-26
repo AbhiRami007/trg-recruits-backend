@@ -49,15 +49,35 @@ const uploadDocument = async (req: any, res: any) => {
   try {
     const documentsData: any = await candidateDocuments.getById(req.params.id);
     let key = req.params.type;
+    let others;
+
     let obj = {};
     obj[key] = req.file.location;
     if (documentsData) {
+      if (
+        req.params.type !== "resume" &&
+        req.params.type !== "cover" &&
+        req.params.type !== "video_resume"
+      ) {
+        others = documentsData.other_documents;
+        obj = { other_documents: { ...others, ...obj } };
+      }
       await candidateDocuments.update(req.params.id, obj);
     } else {
+      if (
+        req.params.type !== "resume" &&
+        req.params.type !== "cover" &&
+        req.params.type !== "video_resume"
+      ) {
+        others = obj;
+      }
       const reqBody = {
         userId: req.params.id,
-        resume: req.params.type == "resume" ? req.file.location : "",
-        cover_letter: req.params.type == "cover" ? req.file.location : "",
+        resume: req.params.type == "resume" ? req.file.location : null,
+        cover_letter: req.params.type == "cover" ? req.file.location : null,
+        video_resume:
+          req.params.type == "video_resume" ? req.file.location : null,
+        other_documents: others,
       };
       await candidateDocuments.create(reqBody);
     }
@@ -108,11 +128,28 @@ const getDocsByIds = async (req: any, res: any) => {
 const deleteDocument = async (req: any, res: any) => {
   try {
     let documents = await candidateDocuments.getById(req.params.id);
-    const obj = {};
+    let obj = {};
     let key = req.params.type;
     obj[key] = "";
-    const file = documents && documents[req.params.type].split("/").pop();
+    const file =
+      documents &&
+      (
+        documents[req.params.type] ||
+        documents?.other_documents[req.params.type]
+      )
+        .split("/")
+        .pop();
+
     if (documents) {
+      let others;
+      if (
+        req.params.type !== "resume" &&
+        req.params.type !== "cover" &&
+        req.params.type !== "video_resume"
+      ) {
+        others = documents.other_documents;
+        obj = { other_documents: { ...others, ...obj } };
+      }
       await candidateDocuments.update(req.params.id, obj);
       await s3
         .deleteObject({

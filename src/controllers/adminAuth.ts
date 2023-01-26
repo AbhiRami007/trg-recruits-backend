@@ -170,9 +170,9 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-const verify = async (req: Request, res: Response) => {
+const verify = async (req: Request, res: Response, next: any) => {
   try {
-    let data: any = await authentication.authenticate(req, res, "admin");
+    let data: any = await authentication.authenticate(req, res, "admin", next);
     if (data) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
         "Login Successful",

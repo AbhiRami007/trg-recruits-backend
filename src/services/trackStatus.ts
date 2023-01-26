@@ -1,5 +1,5 @@
-import sequelize from 'sequelize';
-import DB from '../models/index';
+import sequelize from "sequelize";
+import DB from "../models/index";
 const Op = sequelize.Op;
 
 const create = async (params) => {
@@ -8,12 +8,22 @@ const create = async (params) => {
   });
 };
 
-const get = async (user) => {
-  return DB.User.findAndCountAll({
+const get = async (id) => {
+  return DB.TrackStatus.findOne({
     // attributes: ['id', 'first_name', 'last_name', 'email', 'password','role'],
     where: {
-      email: {
-        [Op.eq]: user.email,
+      userId: {
+        [Op.eq]: id,
+      },
+    },
+  });
+};
+
+const update = async (id, status) => {
+  return DB.TrackStatus.update(status, {
+    where: {
+      id: {
+        [Op.eq]: id,
       },
     },
   });
@@ -22,5 +32,5 @@ const get = async (user) => {
 export default {
   create,
   get,
-  
+  update,
 };

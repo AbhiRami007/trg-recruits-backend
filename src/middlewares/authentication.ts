@@ -30,7 +30,7 @@ const generateToken = async (req, res) => {
   }
 };
 
-const authenticate = async (req, res, type) => {
+const authenticate = async (req, res, type, next) => {
   try {
     const accessToken: any = req.headers["authorization"]
       .replace("Bearer ", "")
@@ -90,6 +90,8 @@ const authenticate = async (req, res, type) => {
         StatusCodes.UNAUTHORIZED
       )("Access Denied");
     }
+    next();
+
     return userData;
   } catch (e) {
     return responseHelper.errorResponse(

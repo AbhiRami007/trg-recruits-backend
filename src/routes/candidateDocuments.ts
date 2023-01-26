@@ -21,7 +21,7 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: candidateController.uploadDocument,
         restMethod: "POST",
-        noAuth: true,
+        // noAuth: true,
         param: candidateController.uploadFile.single("file"),
       },
     ],
@@ -32,7 +32,7 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: candidateController.getDocument,
         restMethod: "GET",
-        noAuth: true,
+        // noAuth: true,
       },
     ],
   },
@@ -42,7 +42,7 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: candidateController.deleteDocument,
         restMethod: "PUT",
-        noAuth: true,
+        // noAuth: true,
       },
     ],
   },
@@ -52,12 +52,12 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: candidateController.getDocsByIds,
         restMethod: "GET",
-        noAuth: true,
+        // noAuth: true,
       },
       {
         control: candidateController.deleteDocument,
         restMethod: "DELETE",
-        noAuth: true,
+        // noAuth: true,
       },
     ],
   },
@@ -67,7 +67,7 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: candidateController.listDocuments,
         restMethod: "GET",
-        noAuth: true,
+        // noAuth: true,
       },
     ],
   },

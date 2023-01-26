@@ -119,7 +119,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: authController.getAllUsers,
         restMethod: "GET",
-        noAuth: true,
+        // noAuth: true,
       },
     ],
   },

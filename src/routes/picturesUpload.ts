@@ -19,7 +19,7 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: picturesController.uploadImage,
         restMethod: "POST",
-        noAuth: true,
+        // noAuth: true,
         param: picturesController.uploadFile.single("image"),
       },
     ],
@@ -30,12 +30,12 @@ const uploadMethods: RouteMethodWrapper[] = [
       {
         control: picturesController.getImage,
         restMethod: "GET",
-        noAuth: true,
+        // noAuth: true,
       },
       {
         control: picturesController.deleteFile,
-        restMethod: "DELETE",
-        noAuth: true,
+        restMethod: "PUT",
+        // noAuth: true,
       },
     ],
   },

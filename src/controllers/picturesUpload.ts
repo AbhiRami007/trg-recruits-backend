@@ -51,9 +51,10 @@ const uploadImage = async (req: any, res: any) => {
     if (documentsData) {
       await user.update({ avatar: req.file.location }, req.params.id);
     }
+    const userInfo = await user.getById(req.params.id);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       "Picture Updated",
-      { imagePath: req.file.location }
+      userInfo
     );
   } catch (error) {
     return responseHelper.errorResponse(
@@ -80,14 +81,18 @@ const getImage = async (req: any, res: any) => {
 
 const deleteFile = async (req: any, res: any) => {
   try {
-    const file = req.params.image;
-    await s3
-      .deleteObject({ Bucket: bucket, Key: req.params.user + "/" + file })
-      .promise();
-    return responseHelper.successResponse(
-      res,
-      StatusCodes.OK
-    )("Profile Picture Removed");
+    let userData: any = await user.getById(req.params.id);
+    if (userData && userData.avatar) {
+      const file =
+        userData && userData.avatar && userData.avatar.split("/").pop();
+      await s3.deleteObject({ Bucket: bucket, Key: file }).promise();
+      await user.update({ avatar: "" }, req.params.id);
+    }
+    userData = await user.getById(req.params.id);
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      "Profile Picture Removed",
+      userData
+    );
   } catch (error) {
     return responseHelper.errorResponse(
       res,

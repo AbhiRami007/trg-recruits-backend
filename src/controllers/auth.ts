@@ -57,7 +57,7 @@ const login = async (req: Request, res: Response) => {
         responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
           tokenData.accessToken,
           tokenData.refreshToken,
-          tokenData.userId
+          userRes
         );
       } else {
         responseHelper.errorResponse(

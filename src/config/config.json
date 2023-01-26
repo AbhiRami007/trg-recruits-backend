@@ -1,9 +1,9 @@
 {
     "production": {
         "username": "trg-user",
-        "password": "AVNS_H6YtlgS-pTtwQVfd1aJ",
+        "password": "AVNS_4vhzhZOZ1bMCGOuOeyL",
         "database": "crmdatabase",
-        "host": "trg-db-do-user-13165248-0.b.db.ondigitalocean.com",
+        "host": "trg-server-db-do-user-13165248-0.b.db.ondigitalocean.com",
         "dialect": "postgres",
         "port": "25060"
     }

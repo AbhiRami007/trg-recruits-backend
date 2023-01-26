@@ -100,7 +100,6 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: authController.updaterUserInfo,
         restMethod: "PUT",
-        noAuth: true,
       },
     ],
   },

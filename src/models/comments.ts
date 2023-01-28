@@ -5,7 +5,7 @@ export class Comments extends Model {
   public email: string;
   public comments: Array<string>;
   public is_delete: boolean;
-  public created_on:Date;
+  public created_on: Date;
 }
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
@@ -26,6 +26,14 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: "comments",
         type: dataTypes.ARRAY(DataTypes.STRING),
       },
+      job_id: {
+        field: "job_id",
+        type: dataTypes.INTEGER,
+      },
+      candidate_id: {
+        field: "candidate_id",
+        type: dataTypes.INTEGER,
+      },
       is_new: {
         field: "is_new",
         type: dataTypes.BOOLEAN,
@@ -36,10 +44,10 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
-       created_on: {
+      created_on: {
         field: "created_on",
         type: dataTypes.DATE,
-      }
+      },
     },
     {
       sequelize,

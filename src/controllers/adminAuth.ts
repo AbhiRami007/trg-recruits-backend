@@ -89,7 +89,7 @@ const googleLogin = async (req: Request, res: Response) => {
       "psabhirami015@gmail.com",
       "abhishekomanakuttansheeba@gmail.com",
     ];
-    if (acceptedEmail.includes(req.body.email)) {
+    if (acceptedEmail.includes(data.email)) {
       let userData = await admin.get(data.email);
       if (!userData) {
         const reqBody = {

@@ -25,6 +25,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
         control: jobs.createJobs,
         restMethod: "POST",
         //  noAuth: true,
+        param: jobs.uploadFile.array("files", 2),
       },
       {
         control: jobs.listJobs,

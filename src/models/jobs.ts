@@ -84,36 +84,36 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
 
       requirements: {
         field: "requirements",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       job_description: {
         field: "job_description",
         allowNull: false,
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       job_responsibilites: {
         field: "job_responsibilites",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       qualifications: {
         field: "qualifications",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       preference: {
         field: "preference",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       working_at: {
         field: "working_at",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       about_company: {
         field: "about_company",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       applied_candidates: {
         field: "applied_candidates",
-        type: dataTypes.ARRAY(DataTypes.STRING),
+        type: dataTypes.ARRAY(DataTypes.STRING(10000)),
       },
       created_on: {
         field: "created_on",

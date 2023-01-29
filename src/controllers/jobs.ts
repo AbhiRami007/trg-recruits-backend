@@ -42,12 +42,27 @@ const uploadFile = multer({
   },
 });
 
+function processArray(body) {
+  if (body.includes(",")) {
+    body = body.split(",");
+  } else {
+    body = body.split();
+  }
+  return body;
+}
 const createJobs = async (req: any, res: Response) => {
   try {
     const image = req.files[0].location;
     const logo = req.files[1].location;
     req.body.description_image = image;
     req.body.logo = logo;
+    req.body.requirements = processArray(req.body.requirements);
+    req.body.job_description = processArray(req.body.job_description);
+    req.body.job_responsibilities = processArray(req.body.job_responsibilities);
+    req.body.qualifications = processArray(req.body.qualifications);
+    req.body.preference = processArray(req.body.preference);
+    req.body.working_at = processArray(req.body.working_at);
+    req.body.about_company = processArray(req.body.about_company);
     const jobInfo = await jobs.create(req.body);
     if (jobInfo) {
       return responseHelper.successResponse(res, StatusCodes.OK)(

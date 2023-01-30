@@ -84,7 +84,7 @@ const googleLogin = async (req: Request, res: Response) => {
         },
       }
     );
-    let userData = await admin.get(data.email);
+    let userData = await client.get(data.email);
     if (!userData) {
       const reqBody = {
         name: data.given_name + " " + data.family_name,
@@ -94,14 +94,14 @@ const googleLogin = async (req: Request, res: Response) => {
         is_user_verified: data.email_verified,
         joined_on: new Date(),
       };
-      userData = await admin.create(reqBody);
+      userData = await client.create(reqBody);
     }
     const tokenData = await authentication.generateToken(userData, res);
     if (tokenData) {
       responseHelper.loginSuccessResponse(res, StatusCodes.OK)(
         tokenData.accessToken,
         tokenData.refreshToken,
-        tokenData.userId
+        userData
       );
     }
   } catch (error) {

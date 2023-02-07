@@ -63,6 +63,7 @@ const createJobs = async (req: any, res: Response) => {
     req.body.preference = processArray(req.body.preference);
     req.body.working_at = processArray(req.body.working_at);
     req.body.about_company = processArray(req.body.about_company);
+    req.body.created_on = Date.now();
     const jobInfo = await jobs.create(req.body);
     if (jobInfo) {
       return responseHelper.successResponse(res, StatusCodes.OK)(

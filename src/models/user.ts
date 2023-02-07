@@ -142,10 +142,12 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
       applied_jobs: {
         field: "applied_jobs",
         type: dataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
       },
       saved_jobs: {
         field: "saved_jobs",
         type: dataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
       },
       joined_on: {
         field: "joined_on",

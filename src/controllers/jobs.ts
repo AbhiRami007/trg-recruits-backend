@@ -63,7 +63,7 @@ const createJobs = async (req: any, res: Response) => {
     req.body.preference = processArray(req.body.preference);
     req.body.working_at = processArray(req.body.working_at);
     req.body.about_company = processArray(req.body.about_company);
-    req.body.created_on = Date.now();
+    req.body.created_on = new Date();
     const jobInfo = await jobs.create(req.body);
     if (jobInfo) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
@@ -178,55 +178,6 @@ const removeJob = async (req: Request, res: Response) => {
   }
 };
 
-const appliedJobs = async (req: Request, res: Response) => {
-  try {
-    const isApplied = await user.getById(req.params.id);
-    if (isApplied?.applied_jobs.includes(req.body.applied_jobs)) {
-      return responseHelper.successResponse(
-        res,
-        StatusCodes.OK
-      )("Already Applied");
-    }
-    isApplied?.applied_jobs.push(req.body.applied_jobs);
-    req.body.applied_jobs = isApplied?.applied_jobs;
-    const applied = await user.update(req.body, req.params.id);
-    if (applied) {
-      return responseHelper.successResponse(
-        res,
-        StatusCodes.OK
-      )("Application Sent");
-    }
-  } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
-  }
-};
-
-const savedJobs = async (req: Request, res: Response) => {
-  try {
-    const isSaved = await user.getById(req.params.id);
-    if (isSaved?.saved_jobs.includes(req.body.saved_jobs)) {
-      return responseHelper.successResponse(
-        res,
-        StatusCodes.OK
-      )("Already Saved");
-    }
-    isSaved?.saved_jobs.push(req.body.saved_jobs);
-    req.body.saved_jobs = isSaved?.saved_jobs;
-    const saved = await user.update(req.body, req.params.id);
-    if (saved) {
-      return responseHelper.successResponse(res, StatusCodes.OK)("Saved");
-    }
-  } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
-  }
-};
-
 const getSavedJobs = async (req: Request, res: Response) => {
   try {
     const userInfo = await user.getById(req.params.id);
@@ -273,6 +224,74 @@ const getAppliedJobs = async (req: Request, res: Response) => {
   }
 };
 
+const updateAppliedJobs = async (req: Request, res: Response) => {
+  try {
+    const jobsInfo = await jobs.getById(req.params.id);
+    const userInfo = await user.getById(req.body.userId);
+    if (
+      jobsInfo &&
+      !jobsInfo.dataValues.applied_candidates.includes(req.body.userId) &&
+      userInfo &&
+      !userInfo.dataValues.applied_jobs.includes(req.params.id)
+    ) {
+      const jobApplied = {
+        applied_candidates: [
+          ...jobsInfo.dataValues.applied_candidates,
+          req.body.userId,
+        ],
+      };
+      await jobs.update(req.params.id, jobApplied);
+
+      const userApplied = {
+        applied_jobs: [...userInfo.dataValues.applied_jobs, req.params.id],
+      };
+      await user.update(userApplied, req.body.userId);
+
+      return responseHelper.successResponse(
+        res,
+        StatusCodes.OK
+      )("Applied Successfully");
+    } else {
+      responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Already applied");
+    }
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
+};
+
+const updateSavedJobs = async (req: Request, res: Response) => {
+  try {
+    const userInfo = await user.getById(req.body.userId);
+    if (userInfo && !userInfo.dataValues.saved_jobs.includes(req.params.id)) {
+      const userSaved = {
+        saved_jobs: [...userInfo.dataValues.saved_jobs, req.params.id],
+      };
+      await user.update(userSaved, req.body.userId);
+
+      return responseHelper.successResponse(
+        res,
+        StatusCodes.OK
+      )("Applied Successfully");
+    } else {
+      responseHelper.errorResponse(
+        res,
+        StatusCodes.BAD_REQUEST
+      )("Already applied");
+    }
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
+};
+
 export default {
   createJobs,
   listJobs,
@@ -281,9 +300,9 @@ export default {
   getJobsById,
   updateJob,
   removeJob,
-  appliedJobs,
-  savedJobs,
   getAppliedJobs,
   getSavedJobs,
   uploadFile,
+  updateAppliedJobs,
+  updateSavedJobs,
 };

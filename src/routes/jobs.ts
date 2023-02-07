@@ -13,7 +13,7 @@ const authenticationRoutes: any = {
   jobsId: "/jobs/:id",
   getByLocation: "/jobs/location",
   remove: "/remove/jobs/:id",
-  applied: "/applied-jobs/:id",
+  applied: "/applied/:id",
   saved: "/saved/:id",
 };
 
@@ -83,7 +83,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     route: authenticationRoutes.applied,
     methods: [
       {
-        control: jobs.appliedJobs,
+        control: jobs.updateAppliedJobs,
         restMethod: "PUT",
         //  noAuth: true,
       },
@@ -98,7 +98,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     route: authenticationRoutes.saved,
     methods: [
       {
-        control: jobs.savedJobs,
+        control: jobs.updateSavedJobs,
         restMethod: "PUT",
         //  noAuth: true,
       },

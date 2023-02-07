@@ -32,6 +32,8 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         allowNull: false,
         field: "status",
         type: dataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
+
       },
       added_on: {
         field: "added_on",

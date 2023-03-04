@@ -153,6 +153,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: "joined_on",
         type: dataTypes.DATE,
       },
+      skills:{
+        field: "skills",
+        type: dataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
+      }
     },
     {
       sequelize,

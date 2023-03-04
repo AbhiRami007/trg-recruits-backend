@@ -277,12 +277,12 @@ const updateSavedJobs = async (req: Request, res: Response) => {
       return responseHelper.successResponse(
         res,
         StatusCodes.OK
-      )("Applied Successfully");
+      )("Saved Successfully");
     } else {
       responseHelper.errorResponse(
         res,
         StatusCodes.BAD_REQUEST
-      )("Already applied");
+      )("Already saved");
     }
   } catch (error) {
     responseHelper.errorResponse(

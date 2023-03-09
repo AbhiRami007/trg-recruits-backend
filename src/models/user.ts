@@ -98,7 +98,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.STRING(200),
       },
       date_of_birth: {
-        field: "position",
+        field: "date_of_birth",
         type: dataTypes.STRING(200),
       },
       online: {

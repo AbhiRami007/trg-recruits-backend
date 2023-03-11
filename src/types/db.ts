@@ -7,12 +7,14 @@ import { Education } from "../models/userEducation";
 import { CandidateDocuments } from "../models/candidateDocuments";
 import { Admin } from "../models/admin";
 import { Client } from "../models/client";
+import { CareerProfile } from "../models/careerProfile";
 
 export interface DB {
   sequelize: Sequelize;
   Sequelize: typeof Sequelize;
   User: ModelStatic<User>;
   Education: ModelStatic<Education>;
+  CareerProfile: ModelStatic<CareerProfile>;
   Jobs: ModelStatic<Jobs>;
   Comments: ModelStatic<Comments>;
   TrackStatus: ModelStatic<TrackStatus>;

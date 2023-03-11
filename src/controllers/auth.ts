@@ -298,9 +298,14 @@ const verifyOtp = async (req: Request, res: Response) => {
     );
 
     if (userInfo && otp && userInfo.expiration_time < isExpired) {
-      await user.updateByEmail({ is_active: true }, userInfo.email);
+      if (req.body.newEmail) {
+        await user.update({ email: req.body.newEmail }, userInfo.id);
+        userInfo = await user.getById(userInfo.id);
+      } else {
+        await user.updateByEmail({ is_active: true }, userInfo.email);
+      }
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        "User Verified",
+        "Email Verified",
         userInfo
       );
     } else if (userInfo && !otp) {
@@ -329,11 +334,14 @@ const resendOtp = async (req: Request, res: Response) => {
       //Generate OTP
       const otpInfo = otpGenerator();
       //update email or verify existing email
-      const email = req.body.newemail ? req.body.newemail : req.body.email;
+      const email = req.body.newEmail ? req.body.newemail : req.body.email;
+      const emailUpdateMsg = req.body.newEmail
+        ? "Thank you for being an active member of"
+        : "Welcome to";
       const subject = "Verify Email";
       const body = `<h1>Email Confirmation</h1>
         <h2>Hello ${userData.first_name + " " + userData.last_name}</h2>
-        <p>Thank you for signing up.</p>
+        <p>${emailUpdateMsg} The Recruits Group Limited.</p>
         <p>This is your OTP:<h1>${otpInfo.otp}</h1> Valid for 5 mins</p>
         <p>Do not share your OTP with anyone!</p>
         </div>`;
@@ -392,7 +400,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 };
 const checkPassword = async (req: Request, res: Response) => {
   try {
-    const userInfo = await user.get(req.body);
+    const userInfo = await user.getById(req.body.id);
     const password = authHelper.authenticatePassword(
       req.body.password,
       userInfo?.password
@@ -403,7 +411,7 @@ const checkPassword = async (req: Request, res: Response) => {
       return responseHelper.errorResponse(
         res,
         StatusCodes.BAD_REQUEST
-      )("Password Incorrect");
+      )("Current Password is Incorrect");
     }
   } catch (error) {
     responseHelper.errorResponse(

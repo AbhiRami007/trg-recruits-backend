@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import responseHelper from "../utils/responseHelper";
 import { StatusCodes } from "http-status-codes";
-import userEducation from "../services/userEducation";
+import profile from "../services/careerProfile";
 
-const createEducation = async (req: Request, res: Response) => {
+const createCareerProfile = async (req: Request, res: Response) => {
   try {
-    const education = await userEducation.create(req.body);
-    if (education) {
+    const careerProfile = await profile.create(req.body);
+    if (careerProfile) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Education details added successfully",
-        education
+        "Career profile details added successfully",
+        careerProfile
       );
     }
   } catch (error) {
@@ -20,13 +20,13 @@ const createEducation = async (req: Request, res: Response) => {
   }
 };
 
-const getEducation = async (req: Request, res: Response) => {
+const getCareerProfile = async (req: Request, res: Response) => {
   try {
-    const education = await userEducation.get(req.params.id);
-    if (education) {
+    const careerProfile = await profile.get(req.params.id);
+    if (careerProfile) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Education details fetched successfully",
-        education
+        "Career profile details fetched successfully",
+        careerProfile
       );
     }
   } catch (error) {
@@ -37,13 +37,13 @@ const getEducation = async (req: Request, res: Response) => {
   }
 };
 
-const updateEducation = async (req: Request, res: Response) => {
+const updateCareerProfile = async (req: Request, res: Response) => {
   try {
-    const education = await userEducation.update(req.body, req.params.id);
-    if (education) {
+    const careerProfile = await profile.update(req.body, req.params.id);
+    if (careerProfile) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Education details updated successfully",
-        education
+        "Career profile details updated successfully",
+        careerProfile
       );
     }
   } catch (error) {
@@ -54,13 +54,13 @@ const updateEducation = async (req: Request, res: Response) => {
   }
 };
 
-const deleteEducation = async (req: Request, res: Response) => {
+const deleteCareerProfile = async (req: Request, res: Response) => {
   try {
-    const education = await userEducation.deleteEd({is_delete:true}, req.params.id);
-    if (education) {
+    const careerProfile = await profile.deleteProfile({is_delete:true}, req.params.id);
+    if (careerProfile) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Education details removed successfully",
-        education
+        "Career profile details removed successfully",
+        careerProfile
       );
     }
   } catch (error) {
@@ -72,8 +72,8 @@ const deleteEducation = async (req: Request, res: Response) => {
 };
 
 export default {
-  createEducation,
-  getEducation,
-  updateEducation,
-  deleteEducation,
+  createCareerProfile,
+  getCareerProfile,
+  updateCareerProfile,
+  deleteCareerProfile,
 };

@@ -15,6 +15,7 @@ const authenticationRoutes: any = {
   getUser: "/id/:id",
   verifyotp: "/verify-otp",
   resend: "/resend-otp",
+  update_email:"/update-email",
   forgotPass: "/forgot-password",
   checkPass: "/check-password",
   google: "/google/login",
@@ -143,12 +144,22 @@ const authenticationMethods: RouteMethodWrapper[] = [
       },
     ],
   },
+{
+    route: authenticationRoutes.update_email,
+    methods: [
+      {
+        control: authController.resendOtp,
+        restMethod: "PUT",
+        noAuth: true,
+      },
+    ],
+  },
   {
     route: authenticationRoutes.checkPass,
     methods: [
       {
         control: authController.checkPassword,
-        restMethod: "POST",
+        restMethod: "PUT",
         noAuth: true,
       },
     ],

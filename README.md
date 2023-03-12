@@ -5,5 +5,5 @@
 ### ODM: Sequelize
 ### Server Environment: Node.js
 
-### install dependencies: yarn install
-### run server: yarn run dev:watch
+### install dependencies: npm install
+### run server: npm run dev:watch

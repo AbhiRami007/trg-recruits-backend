@@ -13,7 +13,7 @@ const careerRoutes: any = {
 
 const educationMethods: RouteMethodWrapper[] = [
   {
-    route: careerRoutes.education,
+    route: careerRoutes.profile,
     methods: [
       {
         control: careerProfile.createCareerProfile,
@@ -22,7 +22,7 @@ const educationMethods: RouteMethodWrapper[] = [
     ],
   },
   {
-    route: careerRoutes.manageEducation,
+    route: careerRoutes.manageProfile,
     methods: [
       {
         control: careerProfile.updateCareerProfile,

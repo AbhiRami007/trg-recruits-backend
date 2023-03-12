@@ -11,8 +11,13 @@ const create = async (params) => {
 const get = async (id) => {
   return DB.Education.findAndCountAll({
     where: {
-      userId: {
-        [Op.eq]: id,
+      [Op.and]: {
+        userId: {
+          [Op.eq]: id,
+        },
+        is_delete: {
+          [Op.eq]: false,
+        },
       },
     },
   });

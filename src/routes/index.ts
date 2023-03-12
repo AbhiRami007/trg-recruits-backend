@@ -1,6 +1,7 @@
 import { Router } from "express";
 import login from "./auth";
 import education from "./userEducation";
+import careerProfile from "./careerProfile";
 import upload from "./candidateDocuments";
 import adminLogin from "./adminAuth";
 import ClientLogin from "./clientAuth";
@@ -17,6 +18,7 @@ const clientPrefix: string = `${apiPrefix.prefix}/client`;
 
 router.use(userPrefix, login);
 router.use(userPrefix, education);
+router.use(userPrefix, careerProfile);
 router.use(userPrefix, upload);
 router.use(userPrefix, jobs);
 router.use(userPrefix, profile);

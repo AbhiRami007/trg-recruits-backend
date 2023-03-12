@@ -11,7 +11,7 @@ const careerRoutes: any = {
   manageProfile: "/career-profile/:id",
 };
 
-const educationMethods: RouteMethodWrapper[] = [
+const careerMethods: RouteMethodWrapper[] = [
   {
     route: careerRoutes.profile,
     methods: [
@@ -40,6 +40,6 @@ const educationMethods: RouteMethodWrapper[] = [
   },
 ];
 
-mapMethodsToRouter(educationMethods, careerRouter);
+mapMethodsToRouter(careerMethods, careerRouter);
 
 export default careerRouter;

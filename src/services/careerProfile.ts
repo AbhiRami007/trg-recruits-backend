@@ -9,7 +9,7 @@ const create = async (params) => {
 };
 
 const get = async (id) => {
-  return DB.CareerProfile.findAndCountAll({
+  return DB.CareerProfile.findOne({
     where: {
       [Op.and]: {
         userId: {

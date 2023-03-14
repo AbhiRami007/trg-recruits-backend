@@ -334,7 +334,7 @@ const resendOtp = async (req: Request, res: Response) => {
       //Generate OTP
       const otpInfo = otpGenerator();
       //update email or verify existing email
-      const email = req.body.newEmail ? req.body.newemail : req.body.email;
+      const email = req.body.newEmail ? req.body.newEmail : req.body.email;
       const emailUpdateMsg = req.body.newEmail
         ? "Thank you for being an active member of"
         : "Welcome to";

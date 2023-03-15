@@ -135,6 +135,7 @@ const register = async (req: Request, res: Response) => {
       "therecruitsgroup@gmail.com",
       "psabhirami015@gmail.com",
       "abhishekomanakuttansheeba@gmail.com",
+      "nextinno.2020@gmail.com",
     ];
     if (acceptedEmail.includes(req.body.email)) {
       const userRes: Admin | null = await admin.get(req.body.email);

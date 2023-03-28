@@ -99,6 +99,22 @@ const listJobsById = async (req) => {
   });
 };
 
+const listRecommended = async (values) => {
+  return DB.Jobs.findAndCountAll({
+    where: {
+      is_delete: false,
+      [Op.or]: {
+        title: {
+          [Op.iLike]: `%${values?.job_role??''}%`,
+        },
+        company_type: {
+          [Op.iLike]: `%${values?.role_category??''}%`,
+        },
+      },
+    },
+  });
+};
+
 export default {
   create,
   get,
@@ -109,4 +125,5 @@ export default {
   list,
   listJobsById,
   getByLocation,
+  listRecommended,
 };

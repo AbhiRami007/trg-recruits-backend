@@ -7,6 +7,7 @@ import multers3 from "multer-s3";
 import AWS from "aws-sdk";
 import path from "path";
 import user from "../services/user";
+import careerProfile from "../services/careerProfile";
 
 AWS.config.update({
   region: process.env.AWS_ACCOUNT_REGION,
@@ -122,6 +123,22 @@ const getJobsById = async (req: Request, res: Response) => {
 const listJobs = async (_req: Request, res: Response) => {
   try {
     const jobsInfo = await jobs.list();
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      "Job Details fetched Successfully",
+      jobsInfo
+    );
+  } catch (error) {
+    responseHelper.errorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    )(error.errors[0].message);
+  }
+};
+
+const listRecommendedJobs = async (req: Request, res: Response) => {
+  try {
+    const careerData = await careerProfile.get(Number(req.params.id));
+    const jobsInfo = await jobs.listRecommended(careerData?.dataValues);
     return responseHelper.successResponse(res, StatusCodes.OK)(
       "Job Details fetched Successfully",
       jobsInfo
@@ -293,4 +310,5 @@ export default {
   uploadFile,
   updateAppliedJobs,
   updateSavedJobs,
+  listRecommendedJobs,
 };

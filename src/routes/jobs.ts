@@ -12,8 +12,9 @@ const authenticationRoutes: any = {
   jobsId: "/jobs/:id",
   remove: "/remove/jobs/:id",
   applied: "/applied/:id",
-  filterJobs:"/jobs/search",
+  filterJobs: "/jobs/search",
   saved: "/saved/:id",
+  recommended: "/recommended-jobs/:id",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -30,6 +31,15 @@ const authenticationMethods: RouteMethodWrapper[] = [
         control: jobs.listJobs,
         restMethod: "GET",
         //  noAuth: true,
+      },
+    ],
+  },
+  {
+    route: authenticationRoutes.recommended,
+    methods: [
+      {
+        control: jobs.listRecommendedJobs,
+        restMethod: "GET",
       },
     ],
   },

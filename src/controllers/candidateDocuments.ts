@@ -53,6 +53,11 @@ const uploadDocument = async (req: any, res: any) => {
 
     let obj = {};
     obj[key] = req.file.location;
+    if (req.params.type == "experience") {
+      const data = documentsData.other_documents.experience;
+      obj[key] = [];
+      obj[key].push(...data, req.file.location);
+    }
     if (documentsData) {
       if (
         req.params.type !== "resume" &&
@@ -60,6 +65,7 @@ const uploadDocument = async (req: any, res: any) => {
         req.params.type !== "video_resume"
       ) {
         others = documentsData.other_documents;
+
         obj = { other_documents: { ...others, ...obj } };
       }
       await candidateDocuments.update(req.params.id, obj);

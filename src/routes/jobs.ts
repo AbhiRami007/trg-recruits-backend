@@ -9,11 +9,10 @@ const authenticationRouter: Router = Router({
 
 const authenticationRoutes: any = {
   jobs: "/jobs",
-  getByTitle: "/jobs/title",
   jobsId: "/jobs/:id",
-  getByLocation: "/jobs/location",
   remove: "/remove/jobs/:id",
   applied: "/applied/:id",
+  filterJobs:"/jobs/search",
   saved: "/saved/:id",
 };
 
@@ -35,10 +34,10 @@ const authenticationMethods: RouteMethodWrapper[] = [
     ],
   },
   {
-    route: authenticationRoutes.getByTitle,
+    route: authenticationRoutes.filterJobs,
     methods: [
       {
-        control: jobs.getJobsByTitle,
+        control: jobs.getJobsByLocationOrTitle,
         restMethod: "GET",
         //  noAuth: true,
       },
@@ -55,16 +54,6 @@ const authenticationMethods: RouteMethodWrapper[] = [
       {
         control: jobs.updateJob,
         restMethod: "PUT",
-        //  noAuth: true,
-      },
-    ],
-  },
-  {
-    route: authenticationRoutes.getByLocation,
-    methods: [
-      {
-        control: jobs.getJobsByLocationOrTitle,
-        restMethod: "GET",
         //  noAuth: true,
       },
     ],

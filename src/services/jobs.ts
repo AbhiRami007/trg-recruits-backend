@@ -9,14 +9,14 @@ const create = async (params) => {
 };
 
 const get = async (searchTerm, location) => {
-  return DB.Jobs.findAll({
+  return DB.Jobs.findAndCountAll({
     where: {
       [Op.and]: {
         location: {
-          [Op.eq]: location,
+          [Op.iLike]: `%${location}%`,
         },
         title: {
-          [Op.eq]: searchTerm,
+          [Op.iLike]: `%${searchTerm}%`,
         },
       },
     },
@@ -24,9 +24,26 @@ const get = async (searchTerm, location) => {
 };
 
 const getByTitle = async (title) => {
-  return DB.Jobs.findAll({
+  return DB.Jobs.findAndCountAll({
     where: {
-      title,
+      [Op.or]: {
+        title: {
+          [Op.iLike]: `%${title}%`,
+        },
+        company: {
+          [Op.iLike]: `%${title}%`,
+        },
+      },
+    },
+  });
+};
+
+const getByLocation = async (location) => {
+  return DB.Jobs.findAndCountAll({
+    where: {
+      location: {
+        [Op.iLike]: `%${location}%`,
+      },
     },
   });
 };
@@ -91,4 +108,5 @@ export default {
   getByTitle,
   list,
   listJobsById,
+  getByLocation,
 };

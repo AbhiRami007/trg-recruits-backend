@@ -81,30 +81,19 @@ const createJobs = async (req: any, res: Response) => {
 
 const getJobsByLocationOrTitle = async (req: Request, res: Response) => {
   try {
-    const jobInfo = await jobs.get(req.query.search, req.query.location);
-    if (jobInfo) {
-      return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Job fetched Successfully",
-        jobInfo
-      );
+    let jobInfo;
+    if (req.query.title && !req.query.location) {
+      jobInfo = await jobs.getByTitle(req.query.title);
+    } else if (!req.query.title && req.query.location) {
+      jobInfo = await jobs.getByLocation(req.query.location);
+    } else {
+      jobInfo = await jobs.get(req.query.title, req.query.location);
     }
-  } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
-  }
-};
 
-const getJobsByTitle = async (req: Request, res: Response) => {
-  try {
-    const jobInfo = await jobs.getByTitle(req.query.search);
-    if (jobInfo) {
-      return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Job fetched Successfully",
-        jobInfo
-      );
-    }
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      "Job fetched Successfully",
+      jobInfo
+    );
   } catch (error) {
     responseHelper.errorResponse(
       res,
@@ -295,7 +284,6 @@ const updateSavedJobs = async (req: Request, res: Response) => {
 export default {
   createJobs,
   listJobs,
-  getJobsByTitle,
   getJobsByLocationOrTitle,
   getJobsById,
   updateJob,

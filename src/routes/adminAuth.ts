@@ -143,6 +143,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
       },
     ],
   },
+  
 ];
 
 mapMethodsToRouter(authenticationMethods, adminAuthenticationRouter);

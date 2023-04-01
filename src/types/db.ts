@@ -11,6 +11,7 @@ import { UserSocket } from "../models/userSocket";
 import { UserActions } from "../models/userActions";
 import { UserActionsMap } from "../models/userActionsMap";
 import { CareerProfile } from "../models/careerProfile";
+import { Companies } from "../models/featuredCompanies";
 
 export interface DB {
   sequelize: Sequelize;
@@ -27,4 +28,5 @@ export interface DB {
   UserSocket: ModelStatic<UserSocket>;
   UserActionsMap: ModelStatic<UserActionsMap>;
   UserActions: ModelStatic<UserActions>;
+  Companies: ModelStatic<Companies>;
 }

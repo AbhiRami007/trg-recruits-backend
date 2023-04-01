@@ -81,10 +81,7 @@ const createJobs = async (req: any, res: Response) => {
       );
     }
   } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
 };
 
@@ -306,6 +303,38 @@ const updateSavedJobs = async (req: Request, res: Response) => {
   }
 };
 
+const createFeaturedCompany = async (req: any, res: Response) => {
+  try {
+    const logo = req.files[0]?.location;
+    req.body.logo = logo;
+    req.body.created_on = new Date();
+    req.body.sector = req.body.sector;
+    const client = await jobs.createClient(req.body);
+    if (client) {
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Client created Successfully",
+        client
+      );
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
+  }
+};
+
+const getFeaturedCompany = async (req, res) => {
+  try {
+    const user = await careerProfile.get(req.param.id);
+    const client = await jobs.getClient(user?.current_industry);
+    if (client) {
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Featured Companies fetched",
+        client
+      );
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
+  }
+};
 export default {
   createJobs,
   listJobs,
@@ -319,4 +348,6 @@ export default {
   updateAppliedJobs,
   updateSavedJobs,
   listRecommendedJobs,
+  createFeaturedCompany,
+  getFeaturedCompany,
 };

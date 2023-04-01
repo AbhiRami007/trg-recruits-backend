@@ -8,6 +8,23 @@ const create = async (params) => {
   });
 };
 
+const createClient = async (params) => {
+  return await DB.Client.create({
+    ...params,
+  });
+};
+
+const getClient = async (currentIndustry) => {
+  return DB.Client.findAll({
+    where: {
+      sector: {
+        [Op.iLike]: `%${currentIndustry}%`,
+      },
+    },
+    order: [["id", "DESC"]],
+  });
+};
+
 const get = async (searchTerm, location) => {
   return DB.Jobs.findAndCountAll({
     where: {
@@ -132,4 +149,6 @@ export default {
   listJobsById,
   getByLocation,
   listRecommended,
+  createClient,
+  getClient,
 };

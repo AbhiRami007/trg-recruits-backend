@@ -19,6 +19,7 @@ export class Jobs extends Model {
   public qualifications: Array<string>;
   public preference: Array<string>;
   public working_at: Array<string>;
+  public job_keywords: Array<string>;
   public about_company: Array<string>;
   public created_on: Date;
   public is_delete: boolean;
@@ -92,43 +93,41 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         allowNull: false,
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       job_responsibilites: {
         field: "job_responsibilites",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       qualifications: {
         field: "qualifications",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       preference: {
         field: "preference",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       working_at: {
         field: "working_at",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
+      },
+      job_keywords: {
+        field: "job_keywords",
+        type: dataTypes.ARRAY(DataTypes.STRING(500)),
+        defaultValue: [],
       },
       about_company: {
         field: "about_company",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       applied_candidates: {
         field: "applied_candidates",
         type: dataTypes.ARRAY(DataTypes.STRING(10000)),
         defaultValue: [],
-
       },
       created_on: {
         field: "created_on",

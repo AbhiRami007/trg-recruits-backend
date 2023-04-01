@@ -20,6 +20,7 @@ const get = async (searchTerm, location) => {
         },
       },
     },
+    order: [["id", "DESC"]],
   });
 };
 
@@ -35,6 +36,7 @@ const getByTitle = async (title) => {
         },
       },
     },
+    order: [["id", "DESC"]],
   });
 };
 
@@ -45,6 +47,7 @@ const getByLocation = async (location) => {
         [Op.iLike]: `%${location}%`,
       },
     },
+    order: [["id", "DESC"]],
   });
 };
 
@@ -63,6 +66,7 @@ const list = async () => {
     where: {
       is_delete: false,
     },
+    order: [["id", "DESC"]],
   });
 };
 
@@ -96,6 +100,7 @@ const listJobsById = async (req) => {
         [Op.in]: req,
       },
     },
+    order: [["id", "DESC"]],
   });
 };
 
@@ -105,13 +110,14 @@ const listRecommended = async (values) => {
       is_delete: false,
       [Op.or]: {
         title: {
-          [Op.iLike]: `%${values?.job_role??''}%`,
+          [Op.iLike]: `%${values?.job_role ?? ""}%`,
         },
         company_type: {
-          [Op.iLike]: `%${values?.role_category??''}%`,
+          [Op.iLike]: `%${values?.role_category ?? ""}%`,
         },
       },
     },
+    order: [["id", "DESC"]],
   });
 };
 

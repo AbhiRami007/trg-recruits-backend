@@ -9,6 +9,7 @@ import jobs from "./jobs";
 import profile from "./picturesUpload";
 import comments from "./comments";
 import status from "./trackStatus";
+import notification from "./userSocketNotification"
 import { apiPrefix } from "../config/env";
 
 const router: Router = Router();
@@ -24,6 +25,7 @@ router.use(userPrefix, jobs);
 router.use(userPrefix, profile);
 router.use(userPrefix, comments);
 router.use(userPrefix, status);
+router.use(userPrefix, notification);
 
 router.use(prefix, adminLogin);
 

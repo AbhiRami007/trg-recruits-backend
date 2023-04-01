@@ -7,6 +7,9 @@ import { Education } from "../models/userEducation";
 import { CandidateDocuments } from "../models/candidateDocuments";
 import { Admin } from "../models/admin";
 import { Client } from "../models/client";
+import { UserSocket } from "../models/userSocket";
+import { UserActions } from "../models/userActions";
+import { UserActionsMap } from "../models/userActionsMap";
 import { CareerProfile } from "../models/careerProfile";
 
 export interface DB {
@@ -21,4 +24,7 @@ export interface DB {
   CandidateDocuments: ModelStatic<CandidateDocuments>;
   Admin: ModelStatic<Admin>;
   Client: ModelStatic<Client>;
+  UserSocket: ModelStatic<UserSocket>;
+  UserActionsMap: ModelStatic<UserActionsMap>;
+  UserActions: ModelStatic<UserActions>;
 }

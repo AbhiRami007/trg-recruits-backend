@@ -77,7 +77,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
     {
       sequelize,
       timestamps: false,
-      tableName: "career_profile",
+      tableName: "careerProfile",
     }
   );
   return CareerProfile;

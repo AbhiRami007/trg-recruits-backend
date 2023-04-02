@@ -39,6 +39,11 @@ export function initSocket(server) {
       // Welcome user
       socket.emit("message", "welcome to  The Recruits Group");
 
+      socket.on("jobNotification", async (jobInfo) => {
+        let notifyUserIds = await socketService.getUsersToNotify(jobInfo);
+        await socketService.createSocketConnection(socket.id, notifyUserIds);
+      });
+
       // listen when user calls connected function to store user and socket information
       socket.on("connected", async (userId) => {
         await socketService.createSocketConnection(socket.id, userId);

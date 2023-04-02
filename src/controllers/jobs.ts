@@ -6,8 +6,9 @@ import multer from "multer";
 import multers3 from "multer-s3";
 import AWS from "aws-sdk";
 import path from "path";
-import user from "../services/user";
 import careerProfile from "../services/careerProfile";
+import user from "../services/user";
+import userSocketNotification from "../services/userSocketNotification";
 
 AWS.config.update({
   region: process.env.AWS_ACCOUNT_REGION,
@@ -53,8 +54,8 @@ function processArray(body) {
 }
 const createJobs = async (req: any, res: Response) => {
   try {
-    const image = req.files[0].location;
-    const logo = req.files[1].location;
+    const image = req.files[0]?.location;
+    const logo = req.files[1]?.location;
     req.body.description_image = image;
     req.body.logo = logo;
     req.body.requirements = processArray(req.body.requirements);
@@ -65,18 +66,22 @@ const createJobs = async (req: any, res: Response) => {
     req.body.working_at = processArray(req.body.working_at);
     req.body.about_company = processArray(req.body.about_company);
     req.body.created_on = new Date();
+    req.body.job_keywords = processArray(req.body.job_keywords);
     const jobInfo = await jobs.create(req.body);
     if (jobInfo) {
+      let userData: any = await careerProfile.getByKey(req.body.job_keywords);
+      if (!userData.length) {
+        userData = await user.list();
+      }
+      const notifyUserIds = userData.map((x) => x.userId ?? x.id);
+      userSocketNotification.sendJobPostNotification(notifyUserIds, jobInfo);
       return responseHelper.successResponse(res, StatusCodes.OK)(
         "Job created Successfully",
         jobInfo
       );
     }
   } catch (error) {
-    responseHelper.errorResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }
 };
 
@@ -298,6 +303,38 @@ const updateSavedJobs = async (req: Request, res: Response) => {
   }
 };
 
+const createFeaturedCompany = async (req: any, res: Response) => {
+  try {
+    const logo = req.files[0]?.location;
+    req.body.logo = logo;
+    req.body.created_on = new Date();
+    req.body.sector = req.body.sector;
+    const client = await jobs.createClient(req.body);
+    if (client) {
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Client created Successfully",
+        client
+      );
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
+  }
+};
+
+const getFeaturedCompany = async (req, res) => {
+  try {
+    const user = await careerProfile.get(req.param.id);
+    const client = await jobs.getClient(user?.current_industry);
+    if (client) {
+      return responseHelper.successResponse(res, StatusCodes.OK)(
+        "Featured Companies fetched",
+        client
+      );
+    }
+  } catch (error) {
+    responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
+  }
+};
 export default {
   createJobs,
   listJobs,
@@ -311,4 +348,6 @@ export default {
   updateAppliedJobs,
   updateSavedJobs,
   listRecommendedJobs,
+  createFeaturedCompany,
+  getFeaturedCompany,
 };

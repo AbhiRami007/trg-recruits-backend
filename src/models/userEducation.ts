@@ -73,7 +73,7 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
     {
       sequelize,
       timestamps: false,
-      tableName: "user_education",
+      tableName: "userEducation",
     }
   );
   return Education;

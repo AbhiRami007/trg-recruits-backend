@@ -65,7 +65,7 @@ const updateByEmail = async (body, email) => {
 };
 
 const list = async () => {
-  return DB.User.findAndCountAll({
+  return DB.User.findAll({
     where: {
       [Op.and]: {
         role: {

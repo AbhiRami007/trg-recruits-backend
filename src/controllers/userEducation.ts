@@ -33,7 +33,7 @@ const getEducation = async (req: Request, res: Response) => {
     responseHelper.errorResponse(
       res,
       StatusCodes.INTERNAL_SERVER_ERROR
-    )(error.errors[0].message);
+    )(error);
   }
 };
 

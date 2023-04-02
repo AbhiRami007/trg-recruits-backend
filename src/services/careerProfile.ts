@@ -43,9 +43,25 @@ const deleteProfile = async (body, id) => {
   });
 };
 
+const getByKey = async (keyList) => {
+  return DB.CareerProfile.findAll({
+    where: {
+      [Op.and]: {
+        current_industry: {
+          [Op.in]: keyList,
+        },
+        is_delete: {
+          [Op.eq]: false,
+        },
+      },
+    },
+  });
+};
+
 export default {
   create,
   get,
   update,
   deleteProfile,
+  getByKey,
 };

@@ -16,7 +16,7 @@ const keys = CONFIG.GOOGLE;
 const oAuth2Client = new OAuth2Client(
   keys.clientId,
   keys.clientSecret,
-  keys.redirectUri
+  keys.redirectUri || keys.redirectUriTest
 );
 
 const getAccessToken = async (code) => {

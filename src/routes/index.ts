@@ -6,10 +6,11 @@ import upload from "./candidateDocuments";
 import adminLogin from "./adminAuth";
 import ClientLogin from "./clientAuth";
 import jobs from "./jobs";
+import featuredCompanies from "./featuredCompanies";
 import profile from "./picturesUpload";
 import comments from "./comments";
 import status from "./trackStatus";
-import notification from "./userSocketNotification"
+import notification from "./userSocketNotification";
 import { apiPrefix } from "../config/env";
 
 const router: Router = Router();
@@ -22,6 +23,7 @@ router.use(userPrefix, education);
 router.use(userPrefix, careerProfile);
 router.use(userPrefix, upload);
 router.use(userPrefix, jobs);
+router.use(userPrefix, featuredCompanies);
 router.use(userPrefix, profile);
 router.use(userPrefix, comments);
 router.use(userPrefix, status);

@@ -88,6 +88,7 @@ const googleLogin = async (req: Request, res: Response) => {
       "therecruitsgroup@gmail.com",
       "psabhirami015@gmail.com",
       "abhishekomanakuttansheeba@gmail.com",
+      "mohammedsalihak350@gmail.com"
     ];
     if (acceptedEmail.includes(data.email)) {
       let userData = await admin.get(data.email);
@@ -136,6 +137,7 @@ const register = async (req: Request, res: Response) => {
       "psabhirami015@gmail.com",
       "abhishekomanakuttansheeba@gmail.com",
       "nextinno.2020@gmail.com",
+      "mohammedsalihak350@gmail.com"
     ];
     if (acceptedEmail.includes(req.body.email)) {
       const userRes: Admin | null = await admin.get(req.body.email);

@@ -40,7 +40,7 @@ const uploadFile = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(`Error: File type should be pdf or doc!`);
+      return cb("Error: File type not supported!");
     }
   },
 });

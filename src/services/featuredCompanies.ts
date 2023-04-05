@@ -12,7 +12,7 @@ const getClient = async (currentIndustry) => {
   return DB.Companies.findAll({
     where: {
       sector: {
-        [Op.iLike]: `%${currentIndustry}%`,
+        [Op.iLike]: currentIndustry,
       },
     },
     order: [["id", "DESC"]],

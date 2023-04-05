@@ -62,7 +62,7 @@ const createFeaturedCompany = async (req: any, res: Response) => {
 
 const getFeaturedCompany = async (req, res) => {
   try {
-    const user = await careerProfile.get(req.param.id);
+    const user = await careerProfile.get(req.params.id);
     const allCompanies = await featuredCompanies.getAllClients();
     let client = await featuredCompanies.getClient(user?.current_industry);
     client = client.length > 0 ? client : allCompanies;

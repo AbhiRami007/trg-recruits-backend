@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import notificationService from "../services/userSocketNotification";
 import responseHelper from "../utils/responseHelper";
+// import userSocketNotification from "../services/userSocketNotification";
+
+// const sendJobNotification = () => {
+//   const jobInfo = await
+//   return userSocketNotification.sendJobPostNotification(req.params.id, jobInfo);
+// };
 
 const list = async (req, res) => {
   try {
@@ -54,4 +60,4 @@ const countNew = async (req, res) => {
   }
 };
 
-export default { list, update, updateNew, countNew};
+export default { list, update, updateNew, countNew };

@@ -26,7 +26,7 @@ const createSocketConnection = async (socketId, userIds) => {
 };
 
 const getUsersToNotify = async (jobInfo) => {
-  let userData: any = await careerProfile.getByKey(jobInfo.job_keywords);
+  let userData: any = await careerProfile.getByKey(jobInfo?.data?.data?.job_keywords);
   if (!userData.length) {
     userData = await user.list();
   }

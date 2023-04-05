@@ -45,15 +45,15 @@ export function initSocket(server) {
       });
 
       // listen when user calls connected function to store user and socket information
-      socket.on("connected", async (userId) => {
-        await socketService.createSocketConnection(socket.id, userId);
+      socket.on("sendNotification", async (userId) => {
+        await socketService.createSocketConnection(socket.id, [userId]);
       });
 
       // Runs when clients disconnect
-      socket.on("disconnect", async () => {
-        await socketService.deleteSocketConnection(socket.id);
-        io.emit("message", "A user has left the chat");
-      });
+      // socket.on("disconnect", async () => {
+      //   await socketService.deleteSocketConnection(socket.id);
+      //   io.emit("message", "A user has left the chat");
+      // });
     });
   }
 }

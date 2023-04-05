@@ -12,7 +12,7 @@ const userActions = {
 };
 
 const logUserActions = async (payload) => {
-  const { actionId, action, comments, notifyUserId, isAlert } = payload;
+  const { actionId, action, comments, notifyUserId, isAlert} = payload;
   try {
     if (action === userActions.AddNewJob) {
       const entry = await DB.UserActions.findOne({

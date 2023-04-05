@@ -75,7 +75,7 @@ const sendJobPostNotification = async (notifyUser, payload) => {
   });
 
   userSocketConnections.map((x) => {
-    getSocketIO().to(x.socketId).emit("jobNotification", userActionDetails);
+    getSocketIO().to(x.socketId).emit("sendNotification", userActionDetails);
   });
 };
 

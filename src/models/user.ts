@@ -131,6 +131,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
+      is_mobile_verified: {
+        field: "is_mobile_verified",
+        type: dataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       otp: {
         field: "otp",
         type: dataTypes.STRING(200),
@@ -153,11 +158,11 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
         field: "joined_on",
         type: dataTypes.DATE,
       },
-      skills:{
+      skills: {
         field: "skills",
         type: dataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
-      }
+      },
     },
     {
       sequelize,

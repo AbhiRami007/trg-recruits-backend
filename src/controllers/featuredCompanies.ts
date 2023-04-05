@@ -1,4 +1,4 @@
-import {Response } from "express";
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import responseHelper from "../utils/responseHelper";
 import multer from "multer";
@@ -64,13 +64,12 @@ const getFeaturedCompany = async (req, res) => {
   try {
     const user = await careerProfile.get(req.param.id);
     const allCompanies = await featuredCompanies.getAllClients();
-    const client = await featuredCompanies.getClient(user?.current_industry);
-    if (client || allCompanies) {
-      return responseHelper.successResponse(res, StatusCodes.OK)(
-        "Featured Companies fetched",
-        client ?? allCompanies
-      );
-    }
+    let client = await featuredCompanies.getClient(user?.current_industry);
+    client = client.length > 0 ? client : allCompanies;
+    return responseHelper.successResponse(res, StatusCodes.OK)(
+      "Featured Companies fetched",
+      client
+    );
   } catch (error) {
     responseHelper.errorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR)(error);
   }

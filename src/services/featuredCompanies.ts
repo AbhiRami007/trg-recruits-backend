@@ -3,13 +3,13 @@ import DB from "../models/index";
 const Op = sequelize.Op;
 
 const createClient = async (params) => {
-  return await DB.Client.create({
+  return await DB.Companies.create({
     ...params,
   });
 };
 
 const getClient = async (currentIndustry) => {
-  return DB.Client.findAll({
+  return DB.Companies.findAll({
     where: {
       sector: {
         [Op.iLike]: `%${currentIndustry}%`,
@@ -20,7 +20,7 @@ const getClient = async (currentIndustry) => {
 };
 
 const getAllClients = async () => {
-  return DB.Client.findAll();
+  return DB.Companies.findAll();
 };
 
 export default {

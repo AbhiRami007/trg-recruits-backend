@@ -1,5 +1,4 @@
 import { Router } from "express";
-import jobs from "../controllers/jobs";
 import { RouteMethodWrapper } from "../types/router";
 import { mapMethodsToRouter } from "../utils/routerHelper";
 import featuredCompanies from "../controllers/featuredCompanies";
@@ -29,7 +28,7 @@ const authenticationMethods: RouteMethodWrapper[] = [
     route: authenticationRoutes.getFeaturedCompany,
     methods: [
       {
-        control: jobs.getFeaturedCompany,
+        control: featuredCompanies.getFeaturedCompany,
         restMethod: "GET",
         noAuth: true,
       },

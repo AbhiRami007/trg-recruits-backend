@@ -15,8 +15,6 @@ const authenticationRoutes: any = {
   filterJobs: "/jobs/search",
   saved: "/saved/:id",
   recommended: "/recommended-jobs/:id",
-  createClient: "/company",
-  getFeaturedCompany: "/company/:id",
 };
 
 const authenticationMethods: RouteMethodWrapper[] = [
@@ -107,26 +105,6 @@ const authenticationMethods: RouteMethodWrapper[] = [
         control: jobs.getSavedJobs,
         restMethod: "GET",
         //  noAuth: true,
-      },
-    ],
-  },
-  {
-    route: authenticationRoutes.createClient,
-    methods: [
-      {
-        control: jobs.createFeaturedCompany,
-        restMethod: "POST",
-        noAuth: true,
-      },
-    ],
-  },
-  {
-    route: authenticationRoutes.getFeaturedCompany,
-    methods: [
-      {
-        control: jobs.getFeaturedCompany,
-        restMethod: "GET",
-        noAuth: true,
       },
     ],
   },

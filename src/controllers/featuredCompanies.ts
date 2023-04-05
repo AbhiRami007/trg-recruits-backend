@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {Response } from "express";
 import jobs from "../services/jobs";
 import { StatusCodes } from "http-status-codes";
 import responseHelper from "../utils/responseHelper";

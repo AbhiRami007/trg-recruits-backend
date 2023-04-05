@@ -39,7 +39,7 @@ const uploadFile = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(`Error: File type should be jpeg, jpg or png!`);
+      return cb(`Error: File type should be jpeg, jpg or png!`);
     }
   },
 });

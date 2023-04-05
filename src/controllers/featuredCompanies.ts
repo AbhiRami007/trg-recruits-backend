@@ -49,7 +49,7 @@ const createFeaturedCompany = async (req: any, res: Response) => {
     req.body.logo = logo;
     req.body.created_on = new Date();
     req.body.sector = req.body.sector;
-    const client = await jobs.createClient(req.body);
+    const client = await featuredCompanies.createClient(req.body);
     if (client) {
       return responseHelper.successResponse(res, StatusCodes.OK)(
         "Client created Successfully",

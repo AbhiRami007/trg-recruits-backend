@@ -2,7 +2,7 @@
 
 ### Database: PostgreSQL
 ### Middleware: Express.js
-### ODM: Sequelize
+### ORM: Sequelize
 ### Server Environment: Node.js
 
 ### install dependencies: npm install
